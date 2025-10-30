@@ -208,24 +208,21 @@ function App() {
               <div style={{ width: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
                 {/* Badge */}
                 <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '8px 16px',
+                  display: 'inline-block',
+                  padding: '7px 16px 7px 16px',
                   backgroundColor: 'rgba(143, 188, 63, 0.15)',
                   border: '1px solid rgba(143, 188, 63, 0.3)',
                   borderRadius: '20px',
                   marginBottom: '12px',
-                  width: 'fit-content',
-                  height: '32px',
-                  lineHeight: '1'
+                  width: 'fit-content'
                 }}>
                   <span style={{
                     color: '#8fbc3f',
                     fontSize: '13px',
                     fontWeight: '600',
-                    lineHeight: '1',
-                    display: 'block'
+                    lineHeight: '13px',
+                    display: 'inline-block',
+                    verticalAlign: 'middle'
                   }}>Senior Business Leader</span>
                 </div>
 
