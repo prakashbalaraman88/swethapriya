@@ -104,12 +104,28 @@ function App() {
           if (clonedElement) {
             clonedElement.style.width = '210mm';
 
-            const imgElements = clonedElement.querySelectorAll('img');
-            imgElements.forEach((img: Element) => {
-              const htmlImg = img as HTMLImageElement;
-              htmlImg.style.objectFit = 'cover';
-              htmlImg.style.objectPosition = 'center top';
-              htmlImg.style.display = 'block';
+            // Fix hero image specifically
+            const heroImg = clonedElement.querySelector('.relative.grid img') as HTMLImageElement;
+            if (heroImg) {
+              heroImg.style.width = '100%';
+              heroImg.style.height = '110mm';
+              heroImg.style.objectFit = 'cover';
+              heroImg.style.objectPosition = 'center 20%';
+              heroImg.style.display = 'block';
+              heroImg.style.position = 'relative';
+            }
+
+            // Ensure fonts are loaded and applied
+            const allText = clonedElement.querySelectorAll('*');
+            allText.forEach((el: Element) => {
+              const htmlEl = el as HTMLElement;
+              const computedStyle = getComputedStyle(el);
+              if (computedStyle.fontFamily) {
+                htmlEl.style.fontFamily = computedStyle.fontFamily;
+                htmlEl.style.fontWeight = computedStyle.fontWeight;
+                htmlEl.style.fontSize = computedStyle.fontSize;
+                htmlEl.style.lineHeight = computedStyle.lineHeight;
+              }
             });
           }
         }
@@ -220,16 +236,17 @@ function App() {
                 </div>
               </div>
 
-              <div className="relative z-10 h-full">
+              <div className="relative z-10 overflow-hidden" style={{ height: '110mm' }}>
                 <img
                   src={photoUrl}
                   alt="Swetha Priya"
-                  className="w-full h-full object-cover"
                   crossOrigin="anonymous"
                   style={{
+                    width: '100%',
                     height: '110mm',
                     objectFit: 'cover',
-                    objectPosition: 'center top'
+                    objectPosition: 'center 20%',
+                    display: 'block'
                   }}
                 />
               </div>
