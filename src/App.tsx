@@ -107,33 +107,18 @@ function App() {
           if (clonedElement) {
             clonedElement.style.width = '210mm';
 
-            // Fix hero image specifically
-            const heroImg = clonedElement.querySelector('.relative.grid img') as HTMLImageElement;
+            // Ensure hero image renders correctly
+            const heroImg = clonedElement.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
             if (heroImg) {
               heroImg.style.width = '100%';
               heroImg.style.height = '110mm';
               heroImg.style.objectFit = 'cover';
-              heroImg.style.objectPosition = 'center 20%';
+              heroImg.style.objectPosition = 'center 15%';
               heroImg.style.display = 'block';
-              heroImg.style.position = 'relative';
+              heroImg.style.position = 'absolute';
+              heroImg.style.top = '0';
+              heroImg.style.left = '0';
             }
-
-            // Copy font styles from original document
-            const originalElements = element.querySelectorAll('*');
-            const clonedElements = clonedElement.querySelectorAll('*');
-
-            clonedElements.forEach((clonedEl: Element, index: number) => {
-              if (originalElements[index]) {
-                const htmlClonedEl = clonedEl as HTMLElement;
-                const originalStyle = window.getComputedStyle(originalElements[index]);
-
-                htmlClonedEl.style.fontFamily = originalStyle.fontFamily;
-                htmlClonedEl.style.fontWeight = originalStyle.fontWeight;
-                htmlClonedEl.style.fontSize = originalStyle.fontSize;
-                htmlClonedEl.style.lineHeight = originalStyle.lineHeight;
-                htmlClonedEl.style.letterSpacing = originalStyle.letterSpacing;
-              }
-            });
           }
         }
       });
@@ -212,38 +197,104 @@ function App() {
       <div ref={portfolioRef} className="w-[210mm] mx-auto bg-[#1a1a1a] shadow-2xl" id="portfolio-content">
         {/* Page 1 - Exact A4 dimensions */}
         <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col" style={{ pageBreakAfter: 'always' }}>
-          <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] text-white overflow-hidden flex-shrink-0" style={{ height: '110mm' }}>
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#8fbc3f]/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#8fbc3f]/3 rounded-full blur-3xl"></div>
+          {/* Hero Section - Redesigned for PDF compatibility */}
+          <div className="relative bg-[#1a1a1a] text-white flex-shrink-0" style={{ height: '110mm' }}>
+            {/* Background decorative elements */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#8fbc3f]/10 via-transparent to-[#8fbc3f]/5"></div>
 
-            <div className="relative grid grid-cols-[48%_52%] h-full">
-              <div className="z-10 flex flex-col justify-center px-10">
-                <div className="inline-block px-4 py-1.5 bg-[#8fbc3f]/20 border border-[#8fbc3f]/30 rounded-full mb-3 self-start">
-                  <span className="text-[#8fbc3f] text-sm font-semibold">Senior Business Leader</span>
+            {/* Content Grid */}
+            <div style={{ display: 'flex', height: '100%' }}>
+              {/* Left Column - Text Content */}
+              <div style={{ width: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
+                {/* Badge */}
+                <div style={{
+                  display: 'inline-block',
+                  padding: '6px 16px',
+                  backgroundColor: 'rgba(143, 188, 63, 0.15)',
+                  border: '1px solid rgba(143, 188, 63, 0.3)',
+                  borderRadius: '20px',
+                  marginBottom: '12px',
+                  width: 'fit-content'
+                }}>
+                  <span style={{ color: '#8fbc3f', fontSize: '13px', fontWeight: '600' }}>Senior Business Leader</span>
                 </div>
-                <h1 className="text-4xl font-bold mb-3 tracking-tight">Swetha Priya</h1>
-                <p className="text-lg text-slate-200 mb-3 font-medium">Business Head | Growth & P&L @MediBuddy</p>
-                <p className="text-sm text-slate-400 leading-relaxed mb-5">
+
+                {/* Name */}
+                <h1 style={{
+                  fontSize: '36px',
+                  fontWeight: '700',
+                  marginBottom: '12px',
+                  letterSpacing: '-0.5px',
+                  lineHeight: '1.2'
+                }}>Swetha Priya</h1>
+
+                {/* Title */}
+                <p style={{
+                  fontSize: '17px',
+                  color: '#e2e8f0',
+                  marginBottom: '12px',
+                  fontWeight: '500',
+                  lineHeight: '1.4'
+                }}>Business Head | Growth & P&L @MediBuddy</p>
+
+                {/* Description */}
+                <p style={{
+                  fontSize: '13px',
+                  color: '#94a3b8',
+                  marginBottom: '20px',
+                  lineHeight: '1.6',
+                  maxWidth: '90%'
+                }}>
                   0→1 Builder | P&L Owner | Scaling Businesses from Concept to ₹100Cr+ | 15+ Years Experience in High-Growth Health-Tech
                 </p>
 
-                <div className="flex flex-wrap gap-2.5">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                    <Briefcase size={16} className="text-[#8fbc3f]" />
-                    <span className="text-sm font-medium">Business Head</span>
+                {/* Tags */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}>
+                    <Briefcase size={16} style={{ color: '#8fbc3f' }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500' }}>Business Head</span>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                    <Target size={16} className="text-[#8fbc3f]" />
-                    <span className="text-sm font-medium">P&L Owner</span>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}>
+                    <Target size={16} style={{ color: '#8fbc3f' }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500' }}>P&L Owner</span>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                    <Rocket size={16} className="text-[#8fbc3f]" />
-                    <span className="text-sm font-medium">0→1 Expert</span>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}>
+                    <Rocket size={16} style={{ color: '#8fbc3f' }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500' }}>0→1 Expert</span>
                   </div>
                 </div>
               </div>
 
-              <div className="relative z-10 overflow-hidden" style={{ height: '110mm' }}>
+              {/* Right Column - Image */}
+              <div style={{
+                width: '50%',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
                 <img
                   src={photoUrl}
                   alt="Swetha Priya"
@@ -252,8 +303,11 @@ function App() {
                     width: '100%',
                     height: '110mm',
                     objectFit: 'cover',
-                    objectPosition: 'center 20%',
-                    display: 'block'
+                    objectPosition: 'center 15%',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
                   }}
                 />
               </div>
