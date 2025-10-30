@@ -425,20 +425,20 @@ function App() {
           </section>
 
           <section className="flex-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="p-2 bg-[#8fbc3f] rounded-lg">
-                <Briefcase className="text-[#1a1a1a]" size={20} />
+            <div className="flex items-center gap-2 mb-3">
+              <div className="p-1.5 bg-[#8fbc3f] rounded-lg">
+                <Briefcase className="text-[#1a1a1a]" size={18} />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Career Journey</h2>
-                <p className="text-gray-400 font-medium text-sm mt-0.5">15+ Years of Leadership Excellence</p>
+                <h2 className="text-xl font-bold text-white">Career Journey</h2>
+                <p className="text-gray-400 font-medium text-xs mt-0.5">15+ Years of Leadership Excellence</p>
               </div>
             </div>
 
             <div className="relative">
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#8fbc3f] via-[#7fa835] to-[#6f942b]"></div>
+              <div className="absolute left-3.5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#8fbc3f] via-[#7fa835] to-[#6f942b]"></div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {[
                   {
                     company: 'MediBuddy',
@@ -483,19 +483,19 @@ function App() {
                     achievement: 'early-career foundation in B2C consultative selling and academic counseling.',
                   }
                 ].map((item, index) => (
-                  <div key={index} className="relative pl-11">
-                    <div className="absolute left-2.5 w-4 h-4 bg-[#8fbc3f] rounded-full border-2 border-[#1a1a1a] shadow-lg"></div>
-                    <div className="bg-[#242424] p-3 rounded-lg border border-[#333333] shadow-lg">
+                  <div key={index} className="relative pl-10">
+                    <div className="absolute left-2.5 w-3.5 h-3.5 bg-[#8fbc3f] rounded-full border-2 border-[#1a1a1a] shadow-lg"></div>
+                    <div className="bg-[#242424] p-2.5 rounded-lg border border-[#333333] shadow-lg">
                       <div className="flex items-start justify-between mb-1">
                         <div>
                           <h3 className="text-sm font-bold text-white">{item.company}</h3>
-                          <p className="text-gray-300 font-medium text-sm">{item.role}</p>
+                          <p className="text-gray-300 font-medium text-xs">{item.role}</p>
                         </div>
                         <span className="px-2 py-0.5 bg-[#8fbc3f]/20 text-[#8fbc3f] text-xs font-semibold rounded-full">
                           {item.duration}
                         </span>
                       </div>
-                      <p className="text-gray-400 text-sm leading-relaxed">{item.achievement}</p>
+                      <p className="text-gray-400 text-xs leading-relaxed">{item.achievement}</p>
                     </div>
                   </div>
                 ))}
@@ -503,8 +503,8 @@ function App() {
             </div>
           </section>
 
-          <div className="bg-[#0a0a0a] text-gray-400 text-center py-3.5 border-t border-[#333333] mt-auto">
-            <p className="text-sm font-medium">Swetha Priya | Business Head & P&L Owner | Building Scalable Health-Tech Businesses</p>
+          <div className="bg-[#0a0a0a] text-gray-400 text-center py-2.5 border-t border-[#333333] mt-3">
+            <p className="text-xs font-medium">Swetha Priya | Business Head & P&L Owner | Building Scalable Health-Tech Businesses</p>
           </div>
         </div>
       </div>
