@@ -189,33 +189,33 @@ function App() {
       <div ref={portfolioRef} className="w-[210mm] mx-auto bg-[#1a1a1a] shadow-2xl" id="portfolio-content">
         {/* Page 1 - Exact A4 dimensions */}
         <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col" style={{ pageBreakAfter: 'always' }}>
-          <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] text-white overflow-hidden flex-shrink-0" style={{ height: '140mm' }}>
+          <div className="relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] text-white overflow-hidden flex-shrink-0" style={{ height: '110mm' }}>
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#8fbc3f]/5 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#8fbc3f]/3 rounded-full blur-3xl"></div>
 
             <div className="relative grid grid-cols-[48%_52%] h-full">
               <div className="z-10 flex flex-col justify-center px-10">
-                <div className="inline-block px-3 py-1 bg-[#8fbc3f]/20 border border-[#8fbc3f]/30 rounded-full mb-2 self-start">
-                  <span className="text-[#8fbc3f] text-xs font-semibold">Senior Business Leader</span>
+                <div className="inline-block px-4 py-1.5 bg-[#8fbc3f]/20 border border-[#8fbc3f]/30 rounded-full mb-3 self-start">
+                  <span className="text-[#8fbc3f] text-sm font-semibold">Senior Business Leader</span>
                 </div>
-                <h1 className="text-3xl font-bold mb-2 tracking-tight">Swetha Priya</h1>
-                <p className="text-base text-slate-200 mb-2.5 font-medium">Business Head | Growth & P&L @MediBuddy</p>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                <h1 className="text-4xl font-bold mb-3 tracking-tight">Swetha Priya</h1>
+                <p className="text-lg text-slate-200 mb-3 font-medium">Business Head | Growth & P&L @MediBuddy</p>
+                <p className="text-sm text-slate-400 leading-relaxed mb-5">
                   0→1 Builder | P&L Owner | Scaling Businesses from Concept to ₹100Cr+ | 15+ Years Experience in High-Growth Health-Tech
                 </p>
 
-                <div className="flex flex-wrap gap-2">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                    <Briefcase size={13} className="text-[#8fbc3f]" />
-                    <span className="text-xs font-medium">Business Head</span>
+                <div className="flex flex-wrap gap-2.5">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <Briefcase size={16} className="text-[#8fbc3f]" />
+                    <span className="text-sm font-medium">Business Head</span>
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                    <Target size={13} className="text-[#8fbc3f]" />
-                    <span className="text-xs font-medium">P&L Owner</span>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <Target size={16} className="text-[#8fbc3f]" />
+                    <span className="text-sm font-medium">P&L Owner</span>
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                    <Rocket size={13} className="text-[#8fbc3f]" />
-                    <span className="text-xs font-medium">0→1 Expert</span>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <Rocket size={16} className="text-[#8fbc3f]" />
+                    <span className="text-sm font-medium">0→1 Expert</span>
                   </div>
                 </div>
               </div>
@@ -227,7 +227,7 @@ function App() {
                   className="w-full h-full object-cover"
                   crossOrigin="anonymous"
                   style={{
-                    height: '140mm',
+                    height: '110mm',
                     objectFit: 'cover',
                     objectPosition: 'center top'
                   }}
@@ -236,59 +236,59 @@ function App() {
             </div>
           </div>
 
-          <div className="px-10 py-5 bg-[#1a1a1a] flex-1 overflow-hidden flex flex-col">
-            <div className="grid grid-cols-4 gap-2.5 mb-4">
-              <div className="bg-[#242424] p-2.5 rounded-lg border border-[#333333] shadow-lg">
-                <div className="flex items-center justify-between mb-1">
-                  <TrendingUp className="text-[#8fbc3f]" size={20} />
-                  <ArrowUpRight className="text-[#8fbc3f]" size={12} />
+          <div className="px-10 py-6 bg-[#1a1a1a] flex-1 overflow-hidden flex flex-col">
+            <div className="grid grid-cols-4 gap-3 mb-6">
+              <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
+                <div className="flex items-center justify-between mb-1.5">
+                  <TrendingUp className="text-[#8fbc3f]" size={24} />
+                  <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-lg font-bold text-white mb-0.5">180x</div>
-                <div className="text-xs text-gray-300 font-medium">Growth Scale</div>
-                <div className="text-xs text-gray-400 mt-0.5">₹10L → ₹18Cr GMV</div>
+                <div className="text-2xl font-bold text-white mb-1">180x</div>
+                <div className="text-sm text-gray-300 font-medium">Growth Scale</div>
+                <div className="text-xs text-gray-400 mt-1">₹10L → ₹18Cr GMV</div>
               </div>
 
-              <div className="bg-[#242424] p-2.5 rounded-lg border border-[#333333] shadow-lg">
-                <div className="flex items-center justify-between mb-1">
-                  <Users className="text-[#8fbc3f]" size={20} />
-                  <ArrowUpRight className="text-[#8fbc3f]" size={12} />
+              <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
+                <div className="flex items-center justify-between mb-1.5">
+                  <Users className="text-[#8fbc3f]" size={24} />
+                  <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-lg font-bold text-white mb-0.5">800+</div>
-                <div className="text-xs text-gray-300 font-medium">Corporate Clients</div>
-                <div className="text-xs text-gray-400 mt-0.5">Enterprise Partners</div>
+                <div className="text-2xl font-bold text-white mb-1">800+</div>
+                <div className="text-sm text-gray-300 font-medium">Corporate Clients</div>
+                <div className="text-xs text-gray-400 mt-1">Enterprise Partners</div>
               </div>
 
-              <div className="bg-[#242424] p-2.5 rounded-lg border border-[#333333] shadow-lg">
-                <div className="flex items-center justify-between mb-1">
-                  <Calendar className="text-[#8fbc3f]" size={20} />
-                  <ArrowUpRight className="text-[#8fbc3f]" size={12} />
+              <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
+                <div className="flex items-center justify-between mb-1.5">
+                  <Calendar className="text-[#8fbc3f]" size={24} />
+                  <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-lg font-bold text-white mb-0.5">15+</div>
-                <div className="text-xs text-gray-300 font-medium">Years Experience</div>
-                <div className="text-xs text-gray-400 mt-0.5">Industry Leadership</div>
+                <div className="text-2xl font-bold text-white mb-1">15+</div>
+                <div className="text-sm text-gray-300 font-medium">Years Experience</div>
+                <div className="text-xs text-gray-400 mt-1">Industry Leadership</div>
               </div>
 
-              <div className="bg-[#242424] p-2.5 rounded-lg border border-[#333333] shadow-lg">
-                <div className="flex items-center justify-between mb-1">
-                  <BarChart3 className="text-[#8fbc3f]" size={20} />
-                  <ArrowUpRight className="text-[#8fbc3f]" size={12} />
+              <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
+                <div className="flex items-center justify-between mb-1.5">
+                  <BarChart3 className="text-[#8fbc3f]" size={24} />
+                  <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-lg font-bold text-white mb-0.5">25%</div>
-                <div className="text-xs text-gray-300 font-medium">QoQ Growth</div>
-                <div className="text-xs text-gray-400 mt-0.5">Sustained Growth Rate</div>
+                <div className="text-2xl font-bold text-white mb-1">25%</div>
+                <div className="text-sm text-gray-300 font-medium">QoQ Growth</div>
+                <div className="text-xs text-gray-400 mt-1">Sustained Growth Rate</div>
               </div>
             </div>
 
-            <section className="mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="p-1.5 bg-[#8fbc3f] rounded-lg">
-                  <Lightbulb className="text-[#1a1a1a]" size={18} />
+            <section className="mt-4">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="p-2 bg-[#8fbc3f] rounded-lg">
+                  <Lightbulb className="text-[#1a1a1a]" size={20} />
                 </div>
-                <h2 className="text-xl font-bold text-white">About Me</h2>
+                <h2 className="text-2xl font-bold text-white">About Me</h2>
               </div>
 
-              <div className="bg-[#242424] p-4 rounded-lg border border-[#333333] shadow-lg">
-                <div className="text-gray-300 leading-relaxed space-y-2 text-xs">
+              <div className="bg-[#242424] p-5 rounded-lg border border-[#333333] shadow-lg">
+                <div className="text-gray-300 leading-relaxed space-y-3 text-sm">
                   <p>
                     I'm a <span className="font-bold text-white">category and business head</span> with a proven record of building and scaling new verticals from the ground up — from <span className="font-bold text-[#8fbc3f]">₹10 lakhs/month to ₹18 crores GMV/month</span> — by owning the complete P&L and driving cross-functional execution.
                   </p>
@@ -303,100 +303,100 @@ function App() {
 
         {/* Page 2 - Exact A4 dimensions */}
         <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10" style={{ pageBreakAfter: 'always' }}>
-          <section className="mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 bg-[#8fbc3f] rounded-lg">
-                <Building2 className="text-[#1a1a1a]" size={18} />
+          <section className="mb-6">
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="p-2 bg-[#8fbc3f] rounded-lg">
+                <Building2 className="text-[#1a1a1a]" size={20} />
               </div>
-              <h2 className="text-xl font-bold text-white">Current Role</h2>
+              <h2 className="text-2xl font-bold text-white">Current Role</h2>
             </div>
 
-            <div className="bg-[#242424] text-white p-3 rounded-lg shadow-lg border border-[#333333]">
-              <div className="flex items-start justify-between mb-2">
+            <div className="bg-[#242424] text-white p-4 rounded-lg shadow-lg border border-[#333333]">
+              <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div className="inline-flex items-center justify-center px-2 py-0.5 bg-[#8fbc3f]/20 border border-[#8fbc3f]/30 rounded-full mb-1">
+                  <div className="inline-flex items-center justify-center px-2.5 py-1 bg-[#8fbc3f]/20 border border-[#8fbc3f]/30 rounded-full mb-2">
                     <span className="text-[#8fbc3f] text-xs font-semibold text-center">CURRENT POSITION</span>
                   </div>
-                  <h3 className="text-base font-bold mb-0.5">MediBuddy</h3>
-                  <p className="text-sm text-gray-200 font-semibold mb-1">Senior Director – Programs (Business Head)</p>
-                  <div className="flex items-center gap-2 text-xs text-gray-300">
-                    <div className="flex items-center gap-1">
-                      <MapPin size={14} />
+                  <h3 className="text-lg font-bold mb-1">MediBuddy</h3>
+                  <p className="text-base text-gray-200 font-semibold mb-2">Senior Director – Programs (Business Head)</p>
+                  <div className="flex items-center gap-3 text-sm text-gray-300">
+                    <div className="flex items-center gap-1.5">
+                      <MapPin size={16} />
                       <span>Bengaluru</span>
                     </div>
                     <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <Calendar size={14} />
+                    <div className="flex items-center gap-1.5">
+                      <Calendar size={16} />
                       <span>2022 – Present (4 years)</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <p className="text-gray-300 mb-2 leading-relaxed text-xs">
+              <p className="text-gray-300 mb-3 leading-relaxed text-sm">
                 Owning P&L and strategy for multiple new business verticals under MediBuddy's "Programs" charter, spanning <span className="font-semibold text-white">Chronic Care, Fitness, Maternity, Women's Health, and EAP</span>.
               </p>
 
-              <div className="mb-2 flex items-center gap-1">
-                <Award className="text-[#8fbc3f]" size={14} />
-                <h4 className="font-bold text-xs text-white">Key Achievements</h4>
+              <div className="mb-3 flex items-center gap-2">
+                <Award className="text-[#8fbc3f]" size={16} />
+                <h4 className="font-bold text-sm text-white">Key Achievements</h4>
               </div>
 
-              <div className="grid gap-1.5">
-                <div className="flex gap-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#333333]">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="text-[#8fbc3f]" size={12} />
+              <div className="grid gap-2">
+                <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
+                  <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-xs">Scaled a nascent business line from <span className="font-bold text-[#8fbc3f]">₹10 lakhs/month to ₹18 crores GMV/month</span> within 24 months through structured product-market fit, process design, and multi-vendor scaling.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Scaled a nascent business line from <span className="font-bold text-[#8fbc3f]">₹10 lakhs/month to ₹18 crores GMV/month</span> within 24 months through structured product-market fit, process design, and multi-vendor scaling.</p>
                 </div>
 
-                <div className="flex gap-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#333333]">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
-                    <Users className="text-[#8fbc3f]" size={12} />
+                <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
+                  <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
+                    <Users className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-xs">Built and led cross-functional teams across Product, Marketing, Sales, Ops, and Customer Service to deliver end-to-end category ownership.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Built and led cross-functional teams across Product, Marketing, Sales, Ops, and Customer Service to deliver end-to-end category ownership.</p>
                 </div>
 
-                <div className="flex gap-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#333333]">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
-                    <ShoppingCart className="text-[#8fbc3f]" size={12} />
+                <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
+                  <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
+                    <ShoppingCart className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-xs">Established new pricing, partner, and distribution models integrating corporate-sponsored and out-of-pocket revenue streams.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Established new pricing, partner, and distribution models integrating corporate-sponsored and out-of-pocket revenue streams.</p>
                 </div>
 
-                <div className="flex gap-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#333333]">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
-                    <Handshake className="text-[#8fbc3f]" size={12} />
+                <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
+                  <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
+                    <Handshake className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-xs">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), driving adoption across <span className="font-bold text-[#8fbc3f]">800+ corporate clients</span>.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), driving adoption across <span className="font-bold text-[#8fbc3f]">800+ corporate clients</span>.</p>
                 </div>
 
-                <div className="flex gap-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#333333]">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
-                    <Target className="text-[#8fbc3f]" size={12} />
+                <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
+                  <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
+                    <Target className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-xs">Designed quarterly OKR frameworks, trackers, and review cadences that improved forecasting accuracy and operating discipline across verticals.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Designed quarterly OKR frameworks, trackers, and review cadences that improved forecasting accuracy and operating discipline across verticals.</p>
                 </div>
 
-                <div className="flex gap-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#333333]">
-                  <div className="flex-shrink-0 w-6 h-6 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
-                    <Layers className="text-[#8fbc3f]" size={12} />
+                <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
+                  <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
+                    <Layers className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-xs">Led category diversification — from chronic condition management to GLP-1 programs, fitness bundles, and maternity offerings — achieving sustainable <span className="font-bold text-[#8fbc3f]">25% QoQ growth</span>.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Led category diversification — from chronic condition management to GLP-1 programs, fitness bundles, and maternity offerings — achieving sustainable <span className="font-bold text-[#8fbc3f]">25% QoQ growth</span>.</p>
                 </div>
               </div>
             </div>
           </section>
 
           <section className="mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 bg-[#8fbc3f] rounded-lg">
-                <Zap className="text-[#1a1a1a]" size={18} />
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="p-2 bg-[#8fbc3f] rounded-lg">
+                <Zap className="text-[#1a1a1a]" size={20} />
               </div>
-              <h2 className="text-xl font-bold text-white">Core Skills</h2>
+              <h2 className="text-2xl font-bold text-white">Core Skills</h2>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2.5">
               {[
                 { skill: 'P&L Ownership & Business Strategy', icon: LineChart },
                 { skill: '0→1 Category Building', icon: Rocket },
@@ -410,11 +410,11 @@ function App() {
               ].map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <div key={index} className="bg-[#242424] p-2 rounded-lg border border-[#333333] shadow-lg">
-                    <div className="inline-flex p-1 bg-[#8fbc3f]/20 rounded-lg mb-1">
-                      <Icon className="text-[#8fbc3f]" size={14} />
+                  <div key={index} className="bg-[#242424] p-3 rounded-lg border border-[#333333] shadow-lg">
+                    <div className="inline-flex p-1.5 bg-[#8fbc3f]/20 rounded-lg mb-2">
+                      <Icon className="text-[#8fbc3f]" size={16} />
                     </div>
-                    <p className="text-gray-200 font-medium leading-snug text-xs">{item.skill}</p>
+                    <p className="text-gray-200 font-medium leading-snug text-sm">{item.skill}</p>
                   </div>
                 );
               })}
@@ -425,20 +425,20 @@ function App() {
         {/* Page 3 - Exact A4 dimensions */}
         <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10">
           <section className="flex-1">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-1.5 bg-[#8fbc3f] rounded-lg">
-                <Briefcase className="text-[#1a1a1a]" size={18} />
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="p-2 bg-[#8fbc3f] rounded-lg">
+                <Briefcase className="text-[#1a1a1a]" size={20} />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Career Journey</h2>
-                <p className="text-gray-400 font-medium text-xs mt-0.5">15+ Years of Leadership Excellence</p>
+                <h2 className="text-2xl font-bold text-white">Career Journey</h2>
+                <p className="text-gray-400 font-medium text-sm mt-0.5">15+ Years of Leadership Excellence</p>
               </div>
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#8fbc3f] via-[#7fa835] to-[#6f942b]"></div>
+              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#8fbc3f] via-[#7fa835] to-[#6f942b]"></div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {[
                   {
                     company: 'MediBuddy',
@@ -483,19 +483,19 @@ function App() {
                     achievement: 'early-career foundation in B2C consultative selling and academic counseling.',
                   }
                 ].map((item, index) => (
-                  <div key={index} className="relative pl-9">
-                    <div className="absolute left-2 w-3 h-3 bg-[#8fbc3f] rounded-full border-2 border-[#1a1a1a] shadow-lg"></div>
-                    <div className="bg-[#242424] p-2 rounded-lg border border-[#333333] shadow-lg">
-                      <div className="flex items-start justify-between mb-0.5">
+                  <div key={index} className="relative pl-11">
+                    <div className="absolute left-2.5 w-4 h-4 bg-[#8fbc3f] rounded-full border-2 border-[#1a1a1a] shadow-lg"></div>
+                    <div className="bg-[#242424] p-3 rounded-lg border border-[#333333] shadow-lg">
+                      <div className="flex items-start justify-between mb-1">
                         <div>
-                          <h3 className="text-xs font-bold text-white">{item.company}</h3>
-                          <p className="text-gray-300 font-medium text-xs">{item.role}</p>
+                          <h3 className="text-sm font-bold text-white">{item.company}</h3>
+                          <p className="text-gray-300 font-medium text-sm">{item.role}</p>
                         </div>
-                        <span className="px-1.5 py-0.5 bg-[#8fbc3f]/20 text-[#8fbc3f] text-xs font-semibold rounded-full">
+                        <span className="px-2 py-0.5 bg-[#8fbc3f]/20 text-[#8fbc3f] text-xs font-semibold rounded-full">
                           {item.duration}
                         </span>
                       </div>
-                      <p className="text-gray-400 text-xs leading-relaxed">{item.achievement}</p>
+                      <p className="text-gray-400 text-sm leading-relaxed">{item.achievement}</p>
                     </div>
                   </div>
                 ))}
@@ -503,8 +503,8 @@ function App() {
             </div>
           </section>
 
-          <div className="bg-[#0a0a0a] text-gray-400 text-center py-3 border-t border-[#333333] mt-auto">
-            <p className="text-xs font-medium">Swetha Priya | Business Head & P&L Owner | Building Scalable Health-Tech Businesses</p>
+          <div className="bg-[#0a0a0a] text-gray-400 text-center py-3.5 border-t border-[#333333] mt-auto">
+            <p className="text-sm font-medium">Swetha Priya | Business Head & P&L Owner | Building Scalable Health-Tech Businesses</p>
           </div>
         </div>
       </div>
