@@ -90,6 +90,9 @@ function App() {
       // Import html2canvas
       const html2canvas = (await import('html2canvas')).default;
 
+      // Wait for all fonts to load
+      await document.fonts.ready;
+
       // Capture with base64 image
       const canvas = await html2canvas(element, {
         scale: 2,
@@ -115,16 +118,20 @@ function App() {
               heroImg.style.position = 'relative';
             }
 
-            // Ensure fonts are loaded and applied
-            const allText = clonedElement.querySelectorAll('*');
-            allText.forEach((el: Element) => {
-              const htmlEl = el as HTMLElement;
-              const computedStyle = getComputedStyle(el);
-              if (computedStyle.fontFamily) {
-                htmlEl.style.fontFamily = computedStyle.fontFamily;
-                htmlEl.style.fontWeight = computedStyle.fontWeight;
-                htmlEl.style.fontSize = computedStyle.fontSize;
-                htmlEl.style.lineHeight = computedStyle.lineHeight;
+            // Copy font styles from original document
+            const originalElements = element.querySelectorAll('*');
+            const clonedElements = clonedElement.querySelectorAll('*');
+
+            clonedElements.forEach((clonedEl: Element, index: number) => {
+              if (originalElements[index]) {
+                const htmlClonedEl = clonedEl as HTMLElement;
+                const originalStyle = window.getComputedStyle(originalElements[index]);
+
+                htmlClonedEl.style.fontFamily = originalStyle.fontFamily;
+                htmlClonedEl.style.fontWeight = originalStyle.fontWeight;
+                htmlClonedEl.style.fontSize = originalStyle.fontSize;
+                htmlClonedEl.style.lineHeight = originalStyle.lineHeight;
+                htmlClonedEl.style.letterSpacing = originalStyle.letterSpacing;
               }
             });
           }
