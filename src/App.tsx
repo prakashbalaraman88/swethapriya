@@ -303,7 +303,7 @@ function App() {
 
         {/* Page 2 - Exact A4 dimensions */}
         <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10" style={{ pageBreakAfter: 'always' }}>
-          <section className="mb-6">
+          <section>
             <div className="flex items-center gap-2.5 mb-3">
               <div className="p-2 bg-[#8fbc3f] rounded-lg">
                 <Building2 className="text-[#1a1a1a]" size={20} />
@@ -387,8 +387,11 @@ function App() {
               </div>
             </div>
           </section>
+        </div>
 
-          <section className="mb-4">
+        {/* Page 3 - Exact A4 dimensions */}
+        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10" style={{ pageBreakAfter: 'always' }}>
+          <section className="mb-6">
             <div className="flex items-center gap-2.5 mb-3">
               <div className="p-2 bg-[#8fbc3f] rounded-lg">
                 <Zap className="text-[#1a1a1a]" size={20} />
@@ -420,10 +423,7 @@ function App() {
               })}
             </div>
           </section>
-        </div>
 
-        {/* Page 3 - Exact A4 dimensions */}
-        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10">
           <section className="flex-1">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="p-2 bg-[#8fbc3f] rounded-lg">
