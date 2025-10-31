@@ -1,10 +1,12 @@
 import { Download, Briefcase, TrendingUp, Target, Award, Users, Building2, Rocket, BarChart3, Lightbulb, LineChart, ShoppingCart, Calendar, MapPin, ArrowUpRight, Handshake, Layers, Zap } from 'lucide-react';
-import { useState, useRef } from 'react';
-import jsPDF from 'jspdf';
+import { useState, useRef, useEffect } from 'react';
+// PDF generation imports handled dynamically
 
 function App() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string>('/Untitled design (2).png');
+  const [photoBase64, setPhotoBase64] = useState<string>('');
+  const portfolioRef = useRef<HTMLDivElement>(null);
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -13,426 +15,159 @@ function App() {
       reader.onload = (e) => {
         const result = e.target?.result as string;
         setPhotoUrl(result);
+        setPhotoBase64(result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const generatePDF = () => {
-    setIsGeneratingPDF(true);
+  // Convert image URL to base64
+  const getImageBase64 = (url: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (url.startsWith('data:')) {
+        resolve(url);
+        return;
+      }
 
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        } else {
+          reject('Failed to get canvas context');
+        }
+      };
+
+      img.onerror = () => reject('Failed to load image');
+      img.src = url;
     });
+  };
 
-    const pageWidth = 210;
-    const pageHeight = 297;
-    let yPos = 0;
-
-    pdf.setFillColor(26, 26, 26);
-    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-
-    const addImage = (imgSrc: string) => {
-      return new Promise<void>((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0);
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 105;
-            const imgHeight = 110;
-            pdf.addImage(imgData, 'PNG', 105, 0, imgWidth, imgHeight);
-          }
-          resolve();
-        };
-        img.onerror = () => resolve();
-        img.src = imgSrc;
-      });
+  // Preload image as base64 on mount
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        const base64 = await getImageBase64(photoUrl);
+        setPhotoBase64(base64);
+      } catch (error) {
+        console.error('Failed to preload image:', error);
+      }
     };
 
-    addImage(photoUrl).then(() => {
-      pdf.setFillColor(143, 188, 63, 0.15 * 255);
-      pdf.roundedRect(15, 15, 65, 10, 3, 3, 'F');
+    if (photoUrl && !photoUrl.startsWith('data:')) {
+      loadImage();
+    }
+  }, [photoUrl]);
 
-      pdf.setDrawColor(143, 188, 63);
-      pdf.setLineWidth(0.3);
-      pdf.roundedRect(15, 15, 65, 10, 3, 3, 'S');
+  const generatePDF = async () => {
+    if (!portfolioRef.current) return;
 
-      pdf.setTextColor(143, 188, 63);
-      pdf.setFontSize(9);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('SENIOR BUSINESS LEADER', 47.5, 21, { align: 'center' });
+    setIsGeneratingPDF(true);
 
-      yPos = 35;
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(32);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Swetha Priya', 15, yPos);
+    try {
+      const element = portfolioRef.current;
 
-      yPos += 10;
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'normal');
-      pdf.setTextColor(226, 232, 240);
-      pdf.text('Business Head | Growth & P&L @MediBuddy', 15, yPos);
+      // Get base64 image first
+      let imageBase64 = photoBase64;
+      if (!imageBase64) {
+        imageBase64 = await getImageBase64(photoUrl);
+      }
 
-      yPos += 8;
-      pdf.setFontSize(10);
-      pdf.setTextColor(148, 163, 184);
-      const desc = pdf.splitTextToSize('0→1 Builder | P&L Owner | Scaling Businesses from Concept to ₹100Cr+ | 15+ Years Experience in High-Growth Health-Tech', 90);
-      pdf.text(desc, 15, yPos);
+      // Store original photoUrl and temporarily set to base64
+      const originalPhotoUrl = photoUrl;
+      setPhotoUrl(imageBase64);
 
-      yPos += 15;
-      const tags = [
-        { icon: '💼', text: 'Business Head' },
-        { icon: '🎯', text: 'P&L Owner' },
-        { icon: '🚀', text: '0→1 Expert' }
-      ];
+      // Wait for React to re-render with base64 image
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      let xPos = 15;
-      tags.forEach(tag => {
-        pdf.setFillColor(255, 255, 255, 0.05 * 255);
-        pdf.roundedRect(xPos, yPos, 30, 8, 2, 2, 'F');
-        pdf.setDrawColor(255, 255, 255, 0.1 * 255);
-        pdf.roundedRect(xPos, yPos, 30, 8, 2, 2, 'S');
+      // Import html2canvas
+      const html2canvas = (await import('html2canvas')).default;
 
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(9);
-        pdf.text(tag.text, xPos + 15, yPos + 5.5, { align: 'center' });
-        xPos += 32;
-      });
+      // Wait for all fonts to load
+      await document.fonts.ready;
 
-      yPos = 120;
-      const statsData = [
-        { value: '180x', label: 'Growth Scale', sub: '₹10L → ₹18Cr GMV' },
-        { value: '100+', label: 'Vendor Partners', sub: 'Strategic Alliances' },
-        { value: '15+', label: 'Years Experience', sub: 'Industry Leadership' },
-        { value: '25%', label: 'QoQ Growth', sub: 'Sustained Growth Rate' }
-      ];
+      // Capture with base64 image
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: false,
+        allowTaint: true,
+        backgroundColor: '#1a1a1a',
+        logging: false,
+        windowWidth: 794,
+        windowHeight: 1123 * 3,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.getElementById('portfolio-content');
+          if (clonedElement) {
+            clonedElement.style.width = '210mm';
 
-      xPos = 15;
-      const statWidth = 45;
-      const statHeight = 28;
-
-      statsData.forEach(stat => {
-        pdf.setFillColor(36, 36, 36);
-        pdf.roundedRect(xPos, yPos, statWidth, statHeight, 2, 2, 'F');
-        pdf.setDrawColor(51, 51, 51);
-        pdf.roundedRect(xPos, yPos, statWidth, statHeight, 2, 2, 'S');
-
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(18);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(stat.value, xPos + statWidth / 2, yPos + 10, { align: 'center' });
-
-        pdf.setFontSize(8);
-        pdf.setFont('helvetica', 'normal');
-        pdf.setTextColor(209, 213, 219);
-        pdf.text(stat.label, xPos + statWidth / 2, yPos + 16, { align: 'center' });
-
-        pdf.setFontSize(7);
-        pdf.setTextColor(156, 163, 175);
-        pdf.text(stat.sub, xPos + statWidth / 2, yPos + 21, { align: 'center' });
-
-        xPos += statWidth + 2;
-      });
-
-      yPos += 35;
-      pdf.setFillColor(143, 188, 63);
-      pdf.roundedRect(15, yPos, 8, 8, 2, 2, 'F');
-
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('About Me', 28, yPos + 6);
-
-      yPos += 13;
-      pdf.setFillColor(36, 36, 36);
-      pdf.roundedRect(15, yPos, 180, 40, 3, 3, 'F');
-      pdf.setDrawColor(51, 51, 51);
-      pdf.roundedRect(15, yPos, 180, 40, 3, 3, 'S');
-
-      pdf.setFontSize(9);
-      pdf.setTextColor(209, 213, 219);
-      pdf.setFont('helvetica', 'normal');
-      const aboutText1 = "I'm a category and business head with a proven record of building and scaling new verticals from the ground up — from ₹10 lakhs/month to ₹18 crores GMV/month — by owning the complete P&L and driving cross-functional execution.";
-      const aboutText2 = "Over the years, I've led multiple 0→1 business builds within India's largest digital healthcare platform, integrating strategy, product, marketing, operations, and customer success into a unified growth engine. I thrive in ambiguity — identifying whitespace opportunities, building structure where none exists, and converting ideas into sustainable revenue lines.";
-
-      const lines1 = pdf.splitTextToSize(aboutText1, 170);
-      const lines2 = pdf.splitTextToSize(aboutText2, 170);
-
-      pdf.text(lines1, 20, yPos + 6);
-      pdf.text(lines2, 20, yPos + 6 + (lines1.length * 4) + 3);
-
-      pdf.addPage();
-      pdf.setFillColor(26, 26, 26);
-      pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-
-      yPos = 20;
-      pdf.setFillColor(143, 188, 63);
-      pdf.roundedRect(15, yPos, 8, 8, 2, 2, 'F');
-
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Current Role', 28, yPos + 6);
-
-      yPos += 13;
-      pdf.setFillColor(36, 36, 36);
-      pdf.roundedRect(15, yPos, 180, 120, 3, 3, 'F');
-      pdf.setDrawColor(51, 51, 51);
-      pdf.roundedRect(15, yPos, 180, 120, 3, 3, 'S');
-
-      let innerY = yPos + 8;
-
-      pdf.setFillColor(143, 188, 63, 0.2 * 255);
-      pdf.roundedRect(20, innerY, 45, 6, 10, 10, 'F');
-      pdf.setDrawColor(143, 188, 63, 0.3 * 255);
-      pdf.roundedRect(20, innerY, 45, 6, 10, 10, 'S');
-
-      pdf.setTextColor(143, 188, 63);
-      pdf.setFontSize(8);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('CURRENT POSITION', 42.5, innerY + 4.5, { align: 'center' });
-
-      innerY += 10;
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(13);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('MediBuddy', 20, innerY);
-
-      innerY += 6;
-      pdf.setFontSize(11);
-      pdf.setTextColor(226, 232, 240);
-      pdf.text('Senior Director – Programs (Business Head)', 20, innerY);
-
-      innerY += 6;
-      pdf.setFontSize(9);
-      pdf.setTextColor(209, 213, 219);
-      pdf.text('Bengaluru  •  2022 – Present (4 years)', 20, innerY);
-
-      innerY += 8;
-      pdf.setFontSize(9);
-      pdf.setTextColor(209, 213, 219);
-      const roleDesc = pdf.splitTextToSize('Owning P&L and strategy for multiple new business verticals under MediBuddy\'s "Programs" charter, spanning Chronic Care, Fitness, Maternity, Women\'s Health, and EAP.', 170);
-      pdf.text(roleDesc, 20, innerY);
-
-      innerY += roleDesc.length * 4 + 5;
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(255, 255, 255);
-      pdf.text('Key Achievements', 20, innerY);
-
-      innerY += 5;
-      const achievements = [
-        'Scaled a nascent business line from ₹10 lakhs/month to ₹18 crores GMV/month within 24 months through structured product-market fit, process design, and multi-vendor scaling.',
-        'Built and led cross-functional teams across Product, Marketing, Sales, Ops, and Customer Service to deliver end-to-end category ownership.',
-        'Established new pricing, partner, and distribution models integrating corporate-sponsored and out-of-pocket revenue streams.',
-        'Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), building network of 100+ vendor partners.',
-        'Designed quarterly OKR frameworks, trackers, and review cadences that improved forecasting accuracy and operating discipline across verticals.'
-      ];
-
-      achievements.forEach((achievement, idx) => {
-        if (innerY > 260) {
-          pdf.addPage();
-          pdf.setFillColor(26, 26, 26);
-          pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-          innerY = 20;
+            // Ensure hero image renders correctly
+            const heroImg = clonedElement.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
+            if (heroImg) {
+              heroImg.style.width = '100%';
+              heroImg.style.height = '110mm';
+              heroImg.style.objectFit = 'cover';
+              heroImg.style.objectPosition = 'center 15%';
+              heroImg.style.display = 'block';
+              heroImg.style.position = 'absolute';
+              heroImg.style.top = '0';
+              heroImg.style.left = '0';
+            }
+          }
         }
-
-        pdf.setFillColor(26, 26, 26);
-        pdf.roundedRect(20, innerY, 170, 12, 2, 2, 'F');
-        pdf.setDrawColor(51, 51, 51);
-        pdf.roundedRect(20, innerY, 170, 12, 2, 2, 'S');
-
-        pdf.setFillColor(143, 188, 63, 0.2 * 255);
-        pdf.roundedRect(22, innerY + 2.5, 5, 5, 1, 1, 'F');
-
-        pdf.setFontSize(8);
-        pdf.setTextColor(209, 213, 219);
-        pdf.setFont('helvetica', 'normal');
-        const achLines = pdf.splitTextToSize(achievement, 160);
-        pdf.text(achLines, 30, innerY + 4);
-
-        innerY += 14;
       });
 
-      pdf.addPage();
-      pdf.setFillColor(26, 26, 26);
-      pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+      // Restore original photoUrl
+      setPhotoUrl(originalPhotoUrl);
 
-      yPos = 20;
-      pdf.setFillColor(143, 188, 63);
-      pdf.roundedRect(15, yPos, 8, 8, 2, 2, 'F');
-
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Core Skills', 28, yPos + 6);
-
-      yPos += 13;
-      const skills = [
-        'P&L Ownership & Business Strategy',
-        '0→1 Category Building',
-        'Product + Ops + Marketing Alignment',
-        'GTM & Growth Strategy',
-        'Pricing & Revenue Model Design',
-        'Cross-Functional Leadership',
-        'Corporate Partnerships & Ecosystem Alliances',
-        'Process Design & Operational Excellence',
-        'Data-Driven Decision-Making'
-      ];
-
-      xPos = 15;
-      let skillYPos = yPos;
-      const skillWidth = 62;
-      const skillHeight = 15;
-
-      skills.forEach((skill, idx) => {
-        if (idx > 0 && idx % 3 === 0) {
-          skillYPos += skillHeight + 2;
-          xPos = 15;
-        }
-
-        pdf.setFillColor(36, 36, 36);
-        pdf.roundedRect(xPos, skillYPos, skillWidth, skillHeight, 2, 2, 'F');
-        pdf.setDrawColor(51, 51, 51);
-        pdf.roundedRect(xPos, skillYPos, skillWidth, skillHeight, 2, 2, 'S');
-
-        pdf.setFillColor(143, 188, 63, 0.2 * 255);
-        pdf.roundedRect(xPos + 2, skillYPos + 2, 5, 5, 1, 1, 'F');
-
-        pdf.setFontSize(8);
-        pdf.setTextColor(209, 213, 219);
-        pdf.setFont('helvetica', 'normal');
-        const skillLines = pdf.splitTextToSize(skill, skillWidth - 10);
-        pdf.text(skillLines, xPos + 3, skillYPos + 10);
-
-        xPos += skillWidth + 2;
+      // Create jsPDF instance
+      const { jsPDF } = await import('jspdf');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
       });
 
-      yPos = skillYPos + skillHeight + 10;
-      pdf.setFillColor(143, 188, 63);
-      pdf.roundedRect(15, yPos, 8, 8, 2, 2, 'F');
+      // Calculate dimensions
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 297; // A4 height in mm
+      let heightLeft = imgHeight;
+      let position = 0;
 
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Career Journey', 28, yPos + 6);
+      // Add first page
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-      pdf.setFontSize(8);
-      pdf.setTextColor(156, 163, 175);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text('15+ Years of Leadership Excellence', 28, yPos + 11);
+      // Add additional pages if needed
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
 
-      yPos += 16;
-
-      const timeline = [
-        {
-          company: 'MediBuddy',
-          duration: '4 yrs',
-          role: 'Leading Programs vertical as Business Head',
-          achievement: 'scaled a new business from ₹10 L/month to ₹18 Cr GMV/month through full P&L ownership and cross-functional leadership.'
-        },
-        {
-          company: 'UrbanKisaan',
-          duration: '1 yr 6 mos',
-          role: 'Vice President of Sales',
-          achievement: 'drove B2C and enterprise expansion in agri-tech and built sales frameworks for rapid scaling.'
-        },
-        {
-          company: 'Unacademy',
-          duration: '7 mos',
-          role: 'Associate Director of Sales',
-          achievement: 'led category-specific growth in the ed-tech space, improving funnel efficiency and retention.'
-        },
-        {
-          company: 'HealthifyMe',
-          duration: '3 yrs 2 mos',
-          role: 'Head of Sales',
-          achievement: 'owned revenue P&L, built nationwide inside-sales engine, and scaled digital health subscriptions multi-fold.'
-        },
-        {
-          company: 'Babajob.com',
-          duration: '1 yr 3 mos',
-          role: 'Assistant Manager – Inside Sales',
-          achievement: 'managed telesales operations and onboarded SMB employers across India.'
-        },
-        {
-          company: 'AEON Learning',
-          duration: '1 yr 1 mo',
-          role: 'Team Lead',
-          achievement: 'led revenue team for ed-tech inside-sales, improving conversion and lead-quality processes.'
-        },
-        {
-          company: 'TutorVista',
-          duration: '2 yrs',
-          role: 'Sales Executive / Academic Counselor',
-          achievement: 'early-career foundation in B2C consultative selling and academic counseling.'
-        }
-      ];
-
-      pdf.setDrawColor(143, 188, 63);
-      pdf.setLineWidth(0.5);
-      pdf.line(18, yPos, 18, yPos + (timeline.length * 20));
-
-      timeline.forEach((item, idx) => {
-        pdf.setFillColor(143, 188, 63);
-        pdf.circle(18, yPos + 3, 2, 'F');
-
-        pdf.setFillColor(36, 36, 36);
-        pdf.roundedRect(25, yPos, 170, 17, 2, 2, 'F');
-        pdf.setDrawColor(51, 51, 51);
-        pdf.roundedRect(25, yPos, 170, 17, 2, 2, 'S');
-
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(item.company, 28, yPos + 5);
-
-        pdf.setFillColor(143, 188, 63, 0.2 * 255);
-        pdf.roundedRect(165, yPos + 2, 25, 5, 10, 10, 'F');
-        pdf.setTextColor(143, 188, 63);
-        pdf.setFontSize(7);
-        pdf.text(item.duration, 177.5, yPos + 5.5, { align: 'center' });
-
-        pdf.setFontSize(8);
-        pdf.setTextColor(209, 213, 219);
-        pdf.setFont('helvetica', 'normal');
-        pdf.text(item.role, 28, yPos + 9);
-
-        pdf.setFontSize(7);
-        pdf.setTextColor(156, 163, 175);
-        const achText = pdf.splitTextToSize(item.achievement, 160);
-        pdf.text(achText, 28, yPos + 13);
-
-        yPos += 20;
-      });
-
-      yPos += 5;
-      pdf.setFillColor(10, 10, 10);
-      pdf.rect(0, yPos, pageWidth, 8, 'F');
-      pdf.setDrawColor(51, 51, 51);
-      pdf.line(0, yPos, pageWidth, yPos);
-
-      pdf.setTextColor(156, 163, 175);
-      pdf.setFontSize(7);
-      pdf.text('Swetha Priya | Business Head & P&L Owner | Building Scalable Health-Tech Businesses', pageWidth / 2, yPos + 5, { align: 'center' });
-
+      // Save the PDF
       pdf.save('Swetha_Priya_Portfolio.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
       setIsGeneratingPDF(false);
-    });
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#1a1a1a]">
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8 no-print">
         <div className="flex justify-end items-center gap-4 mb-8">
           <label
             htmlFor="photo-upload"
@@ -459,33 +194,44 @@ function App() {
         </div>
       </div>
 
-      <div className="w-[210mm] mx-auto bg-[#1a1a1a] shadow-2xl">
-        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col">
+      <div ref={portfolioRef} className="w-[210mm] mx-auto bg-[#1a1a1a] shadow-2xl" id="portfolio-content">
+        {/* Page 1 - Exact A4 dimensions */}
+        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col" style={{ pageBreakAfter: 'always' }}>
+          {/* Hero Section - Redesigned for PDF compatibility */}
           <div className="relative bg-[#1a1a1a] text-white flex-shrink-0" style={{ height: '110mm' }}>
+            {/* Background decorative elements */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#8fbc3f]/10 via-transparent to-[#8fbc3f]/5"></div>
 
+            {/* Content Grid */}
             <div style={{ display: 'flex', height: '100%' }}>
+              {/* Left Column - Text Content */}
               <div style={{ width: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
-                <div style={{
-                  display: 'inline-block',
-                  backgroundColor: 'rgba(143, 188, 63, 0.15)',
-                  border: '1px solid rgba(143, 188, 63, 0.3)',
-                  borderRadius: '6px',
+                {/* Badge */}
+                <table style={{
                   marginBottom: '12px',
-                  padding: '10px 16px',
-                  width: 'fit-content'
+                  borderCollapse: 'collapse'
                 }}>
-                  <span style={{
-                    color: '#8fbc3f',
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    letterSpacing: '0.5px',
-                    textTransform: 'uppercase',
-                    display: 'block',
-                    lineHeight: '1'
-                  }}>SENIOR BUSINESS LEADER</span>
-                </div>
+                  <tbody>
+                    <tr>
+                      <td style={{
+                        backgroundColor: 'rgba(143, 188, 63, 0.15)',
+                        border: '1px solid rgba(143, 188, 63, 0.3)',
+                        borderRadius: '6px',
+                        padding: '6px 14px',
+                        color: '#8fbc3f',
+                        fontSize: '11px',
+                        fontWeight: '700',
+                        letterSpacing: '0.5px',
+                        textTransform: 'uppercase',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        Senior Business Leader
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 
+                {/* Name */}
                 <h1 style={{
                   fontSize: '36px',
                   fontWeight: '700',
@@ -494,6 +240,7 @@ function App() {
                   lineHeight: '1.2'
                 }}>Swetha Priya</h1>
 
+                {/* Title */}
                 <p style={{
                   fontSize: '17px',
                   color: '#e2e8f0',
@@ -502,6 +249,7 @@ function App() {
                   lineHeight: '1.4'
                 }}>Business Head | Growth & P&L @MediBuddy</p>
 
+                {/* Description */}
                 <p style={{
                   fontSize: '13px',
                   color: '#94a3b8',
@@ -512,6 +260,7 @@ function App() {
                   0→1 Builder | P&L Owner | Scaling Businesses from Concept to ₹100Cr+ | 15+ Years Experience in High-Growth Health-Tech
                 </p>
 
+                {/* Tags */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   <div style={{
                     display: 'flex',
@@ -552,6 +301,7 @@ function App() {
                 </div>
               </div>
 
+              {/* Right Column - Image */}
               <div style={{
                 width: '50%',
                 position: 'relative',
@@ -593,9 +343,9 @@ function App() {
                   <Users className="text-[#8fbc3f]" size={24} />
                   <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-2xl font-bold text-white mb-1">100+</div>
-                <div className="text-sm text-gray-300 font-medium">Vendor Partners</div>
-                <div className="text-xs text-gray-400 mt-1">Strategic Alliances</div>
+                <div className="text-2xl font-bold text-white mb-1">800+</div>
+                <div className="text-sm text-gray-300 font-medium">Corporate Clients</div>
+                <div className="text-xs text-gray-400 mt-1">Enterprise Partners</div>
               </div>
 
               <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
@@ -641,7 +391,8 @@ function App() {
           </div>
         </div>
 
-        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10">
+        {/* Page 2 - Exact A4 dimensions */}
+        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10" style={{ pageBreakAfter: 'always' }}>
           <section>
             <div className="flex items-center gap-2.5 mb-3">
               <div className="p-2 bg-[#8fbc3f] rounded-lg">
@@ -653,22 +404,8 @@ function App() {
             <div className="bg-[#242424] text-white p-4 rounded-lg shadow-lg border border-[#333333]">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div style={{
-                    display: 'inline-block',
-                    backgroundColor: 'rgba(143, 188, 63, 0.2)',
-                    border: '1px solid rgba(143, 188, 63, 0.3)',
-                    borderRadius: '9999px',
-                    marginBottom: '8px',
-                    padding: '6px 12px'
-                  }}>
-                    <span style={{
-                      color: '#8fbc3f',
-                      fontSize: '11px',
-                      fontWeight: '700',
-                      display: 'block',
-                      lineHeight: '1',
-                      textAlign: 'center'
-                    }}>CURRENT POSITION</span>
+                  <div className="inline-flex items-center justify-center px-2.5 py-1 bg-[#8fbc3f]/20 border border-[#8fbc3f]/30 rounded-full mb-2">
+                    <span className="text-[#8fbc3f] text-xs font-semibold text-center">CURRENT POSITION</span>
                   </div>
                   <h3 className="text-lg font-bold mb-1">MediBuddy</h3>
                   <p className="text-base text-gray-200 font-semibold mb-2">Senior Director – Programs (Business Head)</p>
@@ -721,7 +458,7 @@ function App() {
                   <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
                     <Handshake className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), building network of <span className="font-bold text-[#8fbc3f]">100+ vendor partners</span>.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), driving adoption across <span className="font-bold text-[#8fbc3f]">800+ corporate clients</span>.</p>
                 </div>
 
                 <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
@@ -742,7 +479,8 @@ function App() {
           </section>
         </div>
 
-        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10">
+        {/* Page 3 - Exact A4 dimensions */}
+        <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col p-10" style={{ pageBreakAfter: 'always' }}>
           <section className="mb-5">
             <div className="flex items-center gap-2.5 mb-2.5">
               <div className="p-2 bg-[#8fbc3f] rounded-lg">
@@ -861,7 +599,7 @@ function App() {
         </div>
       </div>
 
-      <div className="h-12"></div>
+      <div className="h-12 no-print"></div>
     </div>
   );
 }
