@@ -148,65 +148,64 @@ function App() {
 
       pdf.addImage(croppedHeroImage, 'PNG', 105, 0, 105, 110);
 
-      let yPos = 25;
+      let yPos = 20;
 
       pdf.setFillColor(143, 188, 63);
-      pdf.roundedRect(15, yPos - 5, 55, 8, 2, 2, 'F');
-      pdf.setFontSize(9);
+      pdf.roundedRect(15, yPos, 60, 10, 3, 3, 'F');
+      pdf.setFontSize(10);
       pdf.setTextColor(26, 26, 26);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('Senior Business Leader', 17, yPos);
+      pdf.text('Senior Business Leader', 45, yPos + 6.5, { align: 'center' });
 
-      yPos += 15;
+      yPos += 18;
 
-      pdf.setFontSize(36);
+      pdf.setFontSize(40);
       pdf.setTextColor(255, 255, 255);
       pdf.setFont('helvetica', 'bold');
       pdf.text('Swetha', 15, yPos);
-      yPos += 12;
+      yPos += 14;
       pdf.text('Priya', 15, yPos);
 
-      yPos += 12;
+      yPos += 14;
 
-      pdf.setFontSize(14);
+      pdf.setFontSize(13);
       pdf.setFont('helvetica', 'bold');
       pdf.text('Business Head | Growth', 15, yPos);
-      yPos += 6;
+      yPos += 7;
       pdf.text('& P&L @MediBuddy', 15, yPos);
 
-      yPos += 10;
+      yPos += 12;
 
-      pdf.setFontSize(10);
+      pdf.setFontSize(9);
       pdf.setTextColor(200, 200, 200);
       pdf.setFont('helvetica', 'normal');
-      const desc = '0→1 Builder | P&L Owner | Scaling Businesses from Concept to ₹100Cr+ | 15+ Years Experience in High-Growth Health-Tech';
-      const descLines = pdf.splitTextToSize(desc, 85);
-      pdf.text(descLines, 15, yPos);
+      const desc1 = '0→1 Builder | P&L Owner | Scaling Businesses from';
+      const desc2 = 'Concept to ₹100Cr+ | 15+ Years Experience in';
+      const desc3 = 'High-Growth Health-Tech';
+      pdf.text(desc1, 15, yPos);
+      yPos += 5;
+      pdf.text(desc2, 15, yPos);
+      yPos += 5;
+      pdf.text(desc3, 15, yPos);
 
       yPos = 120;
 
       pdf.setFillColor(45, 45, 45);
-      pdf.roundedRect(15, yPos, 45, 12, 2, 2, 'F');
-      pdf.setFontSize(9);
-      pdf.setTextColor(143, 188, 63);
-      pdf.text('💼', 17, yPos + 7);
+      pdf.roundedRect(15, yPos, 55, 14, 3, 3, 'F');
+      pdf.setFontSize(10);
       pdf.setTextColor(255, 255, 255);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('Business Head', 25, yPos + 7);
+      pdf.text('Business Head', 42.5, yPos + 9, { align: 'center' });
 
       pdf.setFillColor(45, 45, 45);
-      pdf.roundedRect(65, yPos, 40, 12, 2, 2, 'F');
-      pdf.setTextColor(143, 188, 63);
-      pdf.text('🎯', 67, yPos + 7);
+      pdf.roundedRect(77, yPos, 55, 14, 3, 3, 'F');
       pdf.setTextColor(255, 255, 255);
-      pdf.text('P&L Owner', 75, yPos + 7);
+      pdf.text('P&L Owner', 104.5, yPos + 9, { align: 'center' });
 
       pdf.setFillColor(45, 45, 45);
-      pdf.roundedRect(110, yPos, 40, 12, 2, 2, 'F');
-      pdf.setTextColor(143, 188, 63);
-      pdf.text('🚀', 112, yPos + 7);
+      pdf.roundedRect(139, yPos, 55, 14, 3, 3, 'F');
       pdf.setTextColor(255, 255, 255);
-      pdf.text('0→1 Expert', 120, yPos + 7);
+      pdf.text('0→1 Expert', 166.5, yPos + 9, { align: 'center' });
 
       yPos += 20;
 
