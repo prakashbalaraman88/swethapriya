@@ -207,29 +207,24 @@ function App() {
               {/* Left Column - Text Content */}
               <div style={{ width: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
                 {/* Badge */}
-                <table style={{
+                <div style={{
+                  display: 'inline-block',
+                  padding: '7px 16px 7px 16px',
+                  backgroundColor: 'rgba(143, 188, 63, 0.15)',
+                  border: '1px solid rgba(143, 188, 63, 0.3)',
+                  borderRadius: '20px',
                   marginBottom: '12px',
-                  borderCollapse: 'collapse'
+                  width: 'fit-content'
                 }}>
-                  <tbody>
-                    <tr>
-                      <td style={{
-                        backgroundColor: 'rgba(143, 188, 63, 0.15)',
-                        border: '1px solid rgba(143, 188, 63, 0.3)',
-                        borderRadius: '6px',
-                        padding: '6px 14px',
-                        color: '#8fbc3f',
-                        fontSize: '11px',
-                        fontWeight: '700',
-                        letterSpacing: '0.5px',
-                        textTransform: 'uppercase',
-                        whiteSpace: 'nowrap'
-                      }}>
-                        Senior Business Leader
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                  <span style={{
+                    color: '#8fbc3f',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    lineHeight: '13px',
+                    display: 'inline-block',
+                    verticalAlign: 'middle'
+                  }}>Senior Business Leader</span>
+                </div>
 
                 {/* Name */}
                 <h1 style={{
