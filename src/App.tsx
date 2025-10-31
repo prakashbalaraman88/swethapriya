@@ -39,9 +39,17 @@ function App() {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
-          const imgWidth = 105;
-          const imgHeight = 110;
-          pdf.addImage(img, 'PNG', 105, 0, imgWidth, imgHeight);
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0);
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 105;
+            const imgHeight = 110;
+            pdf.addImage(imgData, 'PNG', 105, 0, imgWidth, imgHeight);
+          }
           resolve();
         };
         img.onerror = () => resolve();
