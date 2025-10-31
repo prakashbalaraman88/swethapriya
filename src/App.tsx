@@ -50,6 +50,63 @@ function App() {
     });
   };
 
+  // Crop image to match object-fit: cover behavior
+  const getCroppedImageBase64 = (url: string, targetWidth: number, targetHeight: number, objectPosition = 'center 15%'): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+          reject('Failed to get canvas context');
+          return;
+        }
+
+        // Calculate dimensions for object-fit: cover
+        const imgAspect = img.width / img.height;
+        const targetAspect = targetWidth / targetHeight;
+
+        let sourceWidth = img.width;
+        let sourceHeight = img.height;
+        let sourceX = 0;
+        let sourceY = 0;
+
+        if (imgAspect > targetAspect) {
+          // Image is wider than target - crop width
+          sourceWidth = img.height * targetAspect;
+          sourceX = (img.width - sourceWidth) / 2;
+        } else {
+          // Image is taller than target - crop height
+          sourceHeight = img.width / targetAspect;
+          // Parse object position (center 15%)
+          sourceY = img.height * 0.15; // 15% from top
+        }
+
+        // Draw cropped image
+        ctx.drawImage(
+          img,
+          sourceX, sourceY, sourceWidth, sourceHeight,
+          0, 0, targetWidth, targetHeight
+        );
+
+        resolve(canvas.toDataURL('image/png'));
+      };
+
+      img.onerror = () => reject('Failed to load image');
+
+      if (url.startsWith('data:')) {
+        img.src = url;
+      } else {
+        img.src = url;
+      }
+    });
+  };
+
   // Preload image as base64 on mount
   useEffect(() => {
     const loadImage = async () => {
@@ -74,17 +131,19 @@ function App() {
     try {
       const element = portfolioRef.current;
 
-      // Get base64 image first
-      let imageBase64 = photoBase64;
-      if (!imageBase64) {
-        imageBase64 = await getImageBase64(photoUrl);
-      }
+      // Pre-crop the image to match the display dimensions (50% of 794px = 397px, 110mm ≈ 415px at scale 2)
+      const croppedImage = await getCroppedImageBase64(
+        photoUrl,
+        794, // Target width in pixels (will be 50% of this)
+        830, // Target height in pixels (110mm at 96dpi * 2 for scale)
+        'center 15%'
+      );
 
-      // Store original photoUrl and temporarily set to base64
+      // Store original photoUrl and temporarily set to cropped image
       const originalPhotoUrl = photoUrl;
-      setPhotoUrl(imageBase64);
+      setPhotoUrl(croppedImage);
 
-      // Wait for React to re-render with base64 image
+      // Wait for React to re-render with cropped image
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // Import html2canvas
@@ -93,7 +152,7 @@ function App() {
       // Wait for all fonts to load
       await document.fonts.ready;
 
-      // Capture with base64 image
+      // Capture with cropped image
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: false,
@@ -107,22 +166,12 @@ function App() {
           if (clonedElement) {
             clonedElement.style.width = '210mm';
 
-            // Ensure hero image container has proper clipping
-            const heroImgContainer = clonedElement.querySelector('img[alt="Swetha Priya"]')?.parentElement as HTMLElement;
-            if (heroImgContainer) {
-              heroImgContainer.style.overflow = 'hidden';
-              heroImgContainer.style.height = '110mm';
-              heroImgContainer.style.width = '50%';
-              heroImgContainer.style.position = 'relative';
-            }
-
-            // Ensure hero image renders correctly
+            // Ensure hero image renders at correct size
             const heroImg = clonedElement.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
             if (heroImg) {
               heroImg.style.width = '100%';
-              heroImg.style.height = '110mm';
-              heroImg.style.objectFit = 'cover';
-              heroImg.style.objectPosition = 'center 15%';
+              heroImg.style.height = '100%';
+              heroImg.style.objectFit = 'contain';
               heroImg.style.display = 'block';
             }
           }
