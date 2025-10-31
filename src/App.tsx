@@ -131,20 +131,11 @@ function App() {
     try {
       const element = portfolioRef.current;
 
-      // Pre-crop the image to match exact display dimensions
-      const croppedImage = await getCroppedImageBase64(
-        photoUrl,
-        794, // Full width in pixels
-        830, // Height for 110mm at scale 2
-        'center 15%'
-      );
-
-      // Store original photoUrl and temporarily set to cropped image
-      const originalPhotoUrl = photoUrl;
-      setPhotoUrl(croppedImage);
-
-      // Wait for React to re-render with cropped image
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Convert image to base64
+      let imageBase64 = photoBase64;
+      if (!imageBase64) {
+        imageBase64 = await getImageBase64(photoUrl);
+      }
 
       // Import html2canvas
       const html2canvas = (await import('html2canvas')).default;
@@ -152,71 +143,106 @@ function App() {
       // Wait for all fonts to load
       await document.fonts.ready;
 
-      // Capture with precise pixel-based rendering
+      // Capture with print media query
       const canvas = await html2canvas(element, {
         scale: 2,
-        useCORS: false,
-        allowTaint: true,
+        useCORS: true,
+        allowTaint: false,
         backgroundColor: '#1a1a1a',
         logging: false,
         windowWidth: 794,
         windowHeight: 1123 * 3,
-        onclone: (clonedDoc) => {
+        onclone: async (clonedDoc) => {
           const clonedElement = clonedDoc.getElementById('portfolio-content');
-          if (clonedElement) {
-            clonedElement.style.width = '794px';
+          if (!clonedElement) return;
 
-            // Convert all pages to pixel dimensions
-            const pages = clonedElement.querySelectorAll('[style*="pageBreakAfter"]');
-            pages.forEach(page => {
-              (page as HTMLElement).style.width = '794px';
-              (page as HTMLElement).style.height = '1123px';
-            });
+          // Force all elements to use border-box
+          clonedElement.style.cssText = 'width: 794px !important; box-sizing: border-box !important;';
 
-            // Fix hero section to exact pixel dimensions
-            const heroSection = clonedElement.querySelector('.relative.bg-\\[\\#1a1a1a\\].text-white.flex-shrink-0') as HTMLElement;
-            if (heroSection) {
-              heroSection.style.height = '415px'; // 110mm in pixels
-              heroSection.style.display = 'flex';
-              heroSection.style.overflow = 'hidden';
+          // Find and fix all pages
+          const allDivs = clonedElement.querySelectorAll('div');
+          allDivs.forEach(div => {
+            const styles = (div as HTMLElement).style;
+            if (styles.width === '210mm') {
+              (div as HTMLElement).style.width = '794px';
             }
-
-            // Fix text column
-            const textColumn = heroSection?.querySelector('[style*="width: 50%"]') as HTMLElement;
-            if (textColumn) {
-              textColumn.style.width = '397px'; // Exact 50%
-              textColumn.style.height = '415px';
-              textColumn.style.display = 'flex';
-              textColumn.style.flexDirection = 'column';
-              textColumn.style.justifyContent = 'center';
-              textColumn.style.padding = '0 40px';
-              textColumn.style.boxSizing = 'border-box';
+            if (styles.height === '297mm') {
+              (div as HTMLElement).style.height = '1123px';
             }
+            if (styles.height === '110mm') {
+              (div as HTMLElement).style.height = '415px';
+            }
+          });
 
-            // Fix image container and image
-            const imageContainer = clonedElement.querySelector('[style*="overflow: hidden"]') as HTMLElement;
-            if (imageContainer && imageContainer.querySelector('img[alt="Swetha Priya"]')) {
-              imageContainer.style.width = '397px'; // Exact 50%
-              imageContainer.style.height = '415px';
-              imageContainer.style.overflow = 'hidden';
-              imageContainer.style.position = 'relative';
-              imageContainer.style.flexShrink = '0';
+          // Fix the hero section container with display table
+          const heroSection = clonedElement.querySelector('[style*="height: 415px"]') as HTMLElement;
+          if (heroSection) {
+            heroSection.style.cssText = `
+              height: 415px !important;
+              width: 794px !important;
+              display: table !important;
+              table-layout: fixed !important;
+              background: #1a1a1a !important;
+              position: relative !important;
+            `;
 
-              const heroImg = imageContainer.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
-              if (heroImg) {
-                heroImg.style.width = '397px';
-                heroImg.style.height = '415px';
-                heroImg.style.objectFit = 'contain';
-                heroImg.style.objectPosition = 'center';
-                heroImg.style.display = 'block';
+            const contentGrid = heroSection.querySelector('[style*="display: flex"]') as HTMLElement;
+            if (contentGrid) {
+              contentGrid.style.cssText = `
+                display: table-row !important;
+                height: 415px !important;
+                width: 794px !important;
+              `;
+
+              // Fix left column (text)
+              const leftCol = contentGrid.querySelector('[style*="width: 50%"]') as HTMLElement;
+              if (leftCol) {
+                leftCol.style.cssText = `
+                  display: table-cell !important;
+                  width: 397px !important;
+                  height: 415px !important;
+                  vertical-align: middle !important;
+                  padding: 0 40px !important;
+                  box-sizing: border-box !important;
+                  position: relative !important;
+                  z-index: 10 !important;
+                `;
+              }
+
+              // Fix right column (image)
+              const rightCol = contentGrid.querySelector('[style*="overflow: hidden"]') as HTMLElement;
+              if (rightCol) {
+                rightCol.style.cssText = `
+                  display: table-cell !important;
+                  width: 397px !important;
+                  height: 415px !important;
+                  overflow: hidden !important;
+                  position: relative !important;
+                  vertical-align: top !important;
+                  padding: 0 !important;
+                `;
+
+                // Crop and position the image
+                const img = rightCol.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
+                if (img && imageBase64) {
+                  // Replace with pre-cropped image
+                  const croppedImg = await getCroppedImageBase64(imageBase64, 397, 415, 'center 15%');
+                  img.src = croppedImg;
+                  img.style.cssText = `
+                    width: 397px !important;
+                    height: 415px !important;
+                    object-fit: cover !important;
+                    object-position: center !important;
+                    display: block !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                  `;
+                }
               }
             }
           }
         }
       });
-
-      // Restore original photoUrl
-      setPhotoUrl(originalPhotoUrl);
 
       // Create jsPDF instance
       const { jsPDF } = await import('jspdf');
