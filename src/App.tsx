@@ -111,13 +111,10 @@ function App() {
             const heroImg = clonedElement.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
             if (heroImg) {
               heroImg.style.width = '100%';
-              heroImg.style.height = '110mm';
+              heroImg.style.height = '100%';
               heroImg.style.objectFit = 'cover';
               heroImg.style.objectPosition = 'center 15%';
               heroImg.style.display = 'block';
-              heroImg.style.position = 'absolute';
-              heroImg.style.top = '0';
-              heroImg.style.left = '0';
             }
           }
         }
@@ -208,7 +205,8 @@ function App() {
               <div style={{ width: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
                 {/* Badge */}
                 <div style={{
-                  display: 'inline-block',
+                  display: 'inline-flex',
+                  alignItems: 'center',
                   padding: '6px 16px',
                   backgroundColor: 'rgba(143, 188, 63, 0.15)',
                   border: '1px solid rgba(143, 188, 63, 0.3)',
@@ -216,7 +214,7 @@ function App() {
                   marginBottom: '12px',
                   width: 'fit-content'
                 }}>
-                  <span style={{ color: '#8fbc3f', fontSize: '13px', fontWeight: '600' }}>Senior Business Leader</span>
+                  <span style={{ color: '#8fbc3f', fontSize: '13px', fontWeight: '600', lineHeight: '1' }}>Senior Business Leader</span>
                 </div>
 
                 {/* Name */}
@@ -251,7 +249,7 @@ function App() {
                 {/* Tags */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   <div style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
                     padding: '8px 16px',
@@ -259,11 +257,11 @@ function App() {
                     borderRadius: '8px',
                     border: '1px solid rgba(255, 255, 255, 0.1)'
                   }}>
-                    <Briefcase size={16} style={{ color: '#8fbc3f' }} />
-                    <span style={{ fontSize: '13px', fontWeight: '500' }}>Business Head</span>
+                    <Briefcase size={16} style={{ color: '#8fbc3f', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500', lineHeight: '1' }}>Business Head</span>
                   </div>
                   <div style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
                     padding: '8px 16px',
@@ -271,11 +269,11 @@ function App() {
                     borderRadius: '8px',
                     border: '1px solid rgba(255, 255, 255, 0.1)'
                   }}>
-                    <Target size={16} style={{ color: '#8fbc3f' }} />
-                    <span style={{ fontSize: '13px', fontWeight: '500' }}>P&L Owner</span>
+                    <Target size={16} style={{ color: '#8fbc3f', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500', lineHeight: '1' }}>P&L Owner</span>
                   </div>
                   <div style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
                     padding: '8px 16px',
@@ -283,8 +281,8 @@ function App() {
                     borderRadius: '8px',
                     border: '1px solid rgba(255, 255, 255, 0.1)'
                   }}>
-                    <Rocket size={16} style={{ color: '#8fbc3f' }} />
-                    <span style={{ fontSize: '13px', fontWeight: '500' }}>0→1 Expert</span>
+                    <Rocket size={16} style={{ color: '#8fbc3f', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500', lineHeight: '1' }}>0→1 Expert</span>
                   </div>
                 </div>
               </div>
@@ -293,7 +291,8 @@ function App() {
               <div style={{
                 width: '50%',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                height: '110mm'
               }}>
                 <img
                   src={photoUrl}
@@ -301,13 +300,10 @@ function App() {
                   crossOrigin="anonymous"
                   style={{
                     width: '100%',
-                    height: '110mm',
+                    height: '100%',
                     objectFit: 'cover',
                     objectPosition: 'center 15%',
-                    display: 'block',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
+                    display: 'block'
                   }}
                 />
               </div>
