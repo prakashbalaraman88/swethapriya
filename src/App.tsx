@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 
 function App() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState<string>('/image copy copy.png');
+  const [photoUrl, setPhotoUrl] = useState<string>('/Untitled design.png');
   const [photoBase64, setPhotoBase64] = useState<string>('');
   const portfolioRef = useRef<HTMLDivElement>(null);
 
