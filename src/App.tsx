@@ -131,11 +131,12 @@ function App() {
     try {
       const element = portfolioRef.current;
 
-      // Convert image to base64
+      // Pre-crop the image BEFORE html2canvas
       let imageBase64 = photoBase64;
       if (!imageBase64) {
         imageBase64 = await getImageBase64(photoUrl);
       }
+      const croppedImage = await getCroppedImageBase64(imageBase64, 794, 830, 'center 15%');
 
       // Import html2canvas
       const html2canvas = (await import('html2canvas')).default;
@@ -143,7 +144,7 @@ function App() {
       // Wait for all fonts to load
       await document.fonts.ready;
 
-      // Capture with print media query
+      // Capture with minimal modifications
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
@@ -152,94 +153,77 @@ function App() {
         logging: false,
         windowWidth: 794,
         windowHeight: 1123 * 3,
-        onclone: async (clonedDoc) => {
+        onclone: (clonedDoc) => {
           const clonedElement = clonedDoc.getElementById('portfolio-content');
           if (!clonedElement) return;
 
-          // Force all elements to use border-box
-          clonedElement.style.cssText = 'width: 794px !important; box-sizing: border-box !important;';
+          // Convert mm units to pixels for all elements
+          const allElements = clonedElement.getElementsByTagName('*');
+          for (let i = 0; i < allElements.length; i++) {
+            const el = allElements[i] as HTMLElement;
 
-          // Find and fix all pages
-          const allDivs = clonedElement.querySelectorAll('div');
-          allDivs.forEach(div => {
-            const styles = (div as HTMLElement).style;
-            if (styles.width === '210mm') {
-              (div as HTMLElement).style.width = '794px';
+            if (el.style.width === '210mm') {
+              el.style.width = '794px';
             }
-            if (styles.height === '297mm') {
-              (div as HTMLElement).style.height = '1123px';
+            if (el.style.height === '297mm') {
+              el.style.height = '1123px';
             }
-            if (styles.height === '110mm') {
-              (div as HTMLElement).style.height = '415px';
+            if (el.style.height === '110mm') {
+              el.style.height = '415px';
             }
-          });
+          }
 
-          // Fix the hero section container with display table
-          const heroSection = clonedElement.querySelector('[style*="height: 415px"]') as HTMLElement;
+          // Fix hero section with explicit pixel grid
+          const heroSection = clonedDoc.getElementById('hero-section');
           if (heroSection) {
-            heroSection.style.cssText = `
-              height: 415px !important;
-              width: 794px !important;
-              display: table !important;
-              table-layout: fixed !important;
-              background: #1a1a1a !important;
-              position: relative !important;
-            `;
+            heroSection.style.height = '415px';
+            heroSection.style.width = '794px';
+            heroSection.style.display = 'block';
+            heroSection.style.position = 'relative';
+          }
 
-            const contentGrid = heroSection.querySelector('[style*="display: flex"]') as HTMLElement;
-            if (contentGrid) {
-              contentGrid.style.cssText = `
-                display: table-row !important;
-                height: 415px !important;
-                width: 794px !important;
-              `;
+          // Fix grid container
+          const gridContainer = heroSection?.querySelector('[style*="grid"]') as HTMLElement;
+          if (gridContainer) {
+            gridContainer.style.display = 'grid';
+            gridContainer.style.gridTemplateColumns = '397px 397px';
+            gridContainer.style.height = '415px';
+            gridContainer.style.width = '794px';
+          }
 
-              // Fix left column (text)
-              const leftCol = contentGrid.querySelector('[style*="width: 50%"]') as HTMLElement;
-              if (leftCol) {
-                leftCol.style.cssText = `
-                  display: table-cell !important;
-                  width: 397px !important;
-                  height: 415px !important;
-                  vertical-align: middle !important;
-                  padding: 0 40px !important;
-                  box-sizing: border-box !important;
-                  position: relative !important;
-                  z-index: 10 !important;
-                `;
-              }
+          // Fix text column
+          const textColumn = clonedDoc.getElementById('text-column');
+          if (textColumn) {
+            textColumn.style.display = 'flex';
+            textColumn.style.flexDirection = 'column';
+            textColumn.style.justifyContent = 'center';
+            textColumn.style.alignItems = 'flex-start';
+            textColumn.style.padding = '0 40px';
+            textColumn.style.boxSizing = 'border-box';
+            textColumn.style.height = '415px';
+            textColumn.style.width = '397px';
+          }
 
-              // Fix right column (image)
-              const rightCol = contentGrid.querySelector('[style*="overflow: hidden"]') as HTMLElement;
-              if (rightCol) {
-                rightCol.style.cssText = `
-                  display: table-cell !important;
-                  width: 397px !important;
-                  height: 415px !important;
-                  overflow: hidden !important;
-                  position: relative !important;
-                  vertical-align: top !important;
-                  padding: 0 !important;
-                `;
+          // Fix image column
+          const imageColumn = clonedDoc.getElementById('image-column');
+          if (imageColumn) {
+            imageColumn.style.position = 'relative';
+            imageColumn.style.overflow = 'hidden';
+            imageColumn.style.height = '415px';
+            imageColumn.style.width = '397px';
+          }
 
-                // Crop and position the image
-                const img = rightCol.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
-                if (img && imageBase64) {
-                  // Replace with pre-cropped image
-                  const croppedImg = await getCroppedImageBase64(imageBase64, 397, 415, 'center 15%');
-                  img.src = croppedImg;
-                  img.style.cssText = `
-                    width: 397px !important;
-                    height: 415px !important;
-                    object-fit: cover !important;
-                    object-position: center !important;
-                    display: block !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                  `;
-                }
-              }
-            }
+          // Update hero image with pre-cropped version
+          const heroImg = clonedDoc.getElementById('hero-image') as HTMLImageElement;
+          if (heroImg) {
+            heroImg.src = croppedImage;
+            heroImg.style.width = '397px';
+            heroImg.style.height = '415px';
+            heroImg.style.objectFit = 'cover';
+            heroImg.style.objectPosition = 'center';
+            heroImg.style.display = 'block';
+            heroImg.style.margin = '0';
+            heroImg.style.padding = '0';
           }
         }
       });
@@ -316,14 +300,14 @@ function App() {
         {/* Page 1 - Exact A4 dimensions */}
         <div className="w-[210mm] h-[297mm] bg-[#1a1a1a] flex flex-col" style={{ pageBreakAfter: 'always' }}>
           {/* Hero Section - Redesigned for PDF compatibility */}
-          <div className="relative bg-[#1a1a1a] text-white flex-shrink-0" style={{ height: '110mm' }}>
+          <div className="relative bg-[#1a1a1a] text-white flex-shrink-0" style={{ height: '110mm' }} id="hero-section">
             {/* Background decorative elements */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#8fbc3f]/10 via-transparent to-[#8fbc3f]/5"></div>
 
             {/* Content Grid */}
-            <div style={{ display: 'flex', height: '100%' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', height: '100%' }}>
               {/* Left Column - Text Content */}
-              <div style={{ width: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 40px', position: 'relative', zIndex: 10 }} id="text-column">
                 {/* Badge */}
                 <div style={{
                   display: 'inline-flex',
@@ -410,11 +394,9 @@ function App() {
 
               {/* Right Column - Image */}
               <div style={{
-                width: '50%',
                 position: 'relative',
-                overflow: 'hidden',
-                height: '110mm'
-              }}>
+                overflow: 'hidden'
+              }} id="image-column">
                 <img
                   src={photoUrl}
                   alt="Swetha Priya"
@@ -426,6 +408,7 @@ function App() {
                     objectPosition: 'center 15%',
                     display: 'block'
                   }}
+                  id="hero-image"
                 />
               </div>
             </div>
