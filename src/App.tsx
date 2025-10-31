@@ -111,7 +111,7 @@ function App() {
       yPos = 120;
       const statsData = [
         { value: '180x', label: 'Growth Scale', sub: '₹10L → ₹18Cr GMV' },
-        { value: '800+', label: 'Corporate Clients', sub: 'Enterprise Partners' },
+        { value: '100+', label: 'Vendor Partners', sub: 'Strategic Alliances' },
         { value: '15+', label: 'Years Experience', sub: 'Industry Leadership' },
         { value: '25%', label: 'QoQ Growth', sub: 'Sustained Growth Rate' }
       ];
@@ -234,7 +234,7 @@ function App() {
         'Scaled a nascent business line from ₹10 lakhs/month to ₹18 crores GMV/month within 24 months through structured product-market fit, process design, and multi-vendor scaling.',
         'Built and led cross-functional teams across Product, Marketing, Sales, Ops, and Customer Service to deliver end-to-end category ownership.',
         'Established new pricing, partner, and distribution models integrating corporate-sponsored and out-of-pocket revenue streams.',
-        'Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), driving adoption across 800+ corporate clients.',
+        'Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), building network of 100+ vendor partners.',
         'Designed quarterly OKR frameworks, trackers, and review cadences that improved forecasting accuracy and operating discipline across verticals.'
       ];
 
@@ -593,9 +593,9 @@ function App() {
                   <Users className="text-[#8fbc3f]" size={24} />
                   <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-2xl font-bold text-white mb-1">800+</div>
-                <div className="text-sm text-gray-300 font-medium">Corporate Clients</div>
-                <div className="text-xs text-gray-400 mt-1">Enterprise Partners</div>
+                <div className="text-2xl font-bold text-white mb-1">100+</div>
+                <div className="text-sm text-gray-300 font-medium">Vendor Partners</div>
+                <div className="text-xs text-gray-400 mt-1">Strategic Alliances</div>
               </div>
 
               <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
@@ -721,7 +721,7 @@ function App() {
                   <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
                     <Handshake className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), driving adoption across <span className="font-bold text-[#8fbc3f]">800+ corporate clients</span>.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), building network of <span className="font-bold text-[#8fbc3f]">100+ vendor partners</span>.</p>
                 </div>
 
                 <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
