@@ -331,9 +331,9 @@ function App() {
                   <Users className="text-[#8fbc3f]" size={24} />
                   <ArrowUpRight className="text-[#8fbc3f]" size={14} />
                 </div>
-                <div className="text-2xl font-bold text-white mb-1">800+</div>
-                <div className="text-sm text-gray-300 font-medium">Corporate Clients</div>
-                <div className="text-xs text-gray-400 mt-1">Enterprise Partners</div>
+                <div className="text-2xl font-bold text-white mb-1">100+</div>
+                <div className="text-sm text-gray-300 font-medium">Vendor Partners</div>
+                <div className="text-xs text-gray-400 mt-1">Strategic Partnerships</div>
               </div>
 
               <div className="bg-[#242424] p-3.5 rounded-lg border border-[#333333] shadow-lg">
@@ -446,7 +446,7 @@ function App() {
                   <div className="flex-shrink-0 w-7 h-7 bg-[#8fbc3f]/20 rounded-lg flex items-center justify-center">
                     <Handshake className="text-[#8fbc3f]" size={14} />
                   </div>
-                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), driving adoption across <span className="font-bold text-[#8fbc3f]">800+ corporate clients</span>.</p>
+                  <p className="text-gray-200 leading-relaxed text-sm">Forged high-impact partnerships with leading ecosystem players (Cult.fit, Fitpass, Novo Nordisk, Elecom-Japan, etc.), managing <span className="font-bold text-[#8fbc3f]">100+ vendor partners</span>.</p>
                 </div>
 
                 <div className="flex gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-[#333333]">
