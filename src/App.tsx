@@ -107,11 +107,20 @@ function App() {
           if (clonedElement) {
             clonedElement.style.width = '210mm';
 
+            // Ensure hero image container has proper clipping
+            const heroImgContainer = clonedElement.querySelector('img[alt="Swetha Priya"]')?.parentElement as HTMLElement;
+            if (heroImgContainer) {
+              heroImgContainer.style.overflow = 'hidden';
+              heroImgContainer.style.height = '110mm';
+              heroImgContainer.style.width = '50%';
+              heroImgContainer.style.position = 'relative';
+            }
+
             // Ensure hero image renders correctly
             const heroImg = clonedElement.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
             if (heroImg) {
               heroImg.style.width = '100%';
-              heroImg.style.height = '100%';
+              heroImg.style.height = '110mm';
               heroImg.style.objectFit = 'cover';
               heroImg.style.objectPosition = 'center 15%';
               heroImg.style.display = 'block';
