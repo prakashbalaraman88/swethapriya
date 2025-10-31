@@ -217,13 +217,16 @@ function App() {
                         backgroundColor: 'rgba(143, 188, 63, 0.15)',
                         border: '1px solid rgba(143, 188, 63, 0.3)',
                         borderRadius: '6px',
-                        padding: '6px 14px',
+                        padding: '8px 16px',
                         color: '#8fbc3f',
                         fontSize: '11px',
                         fontWeight: '700',
                         letterSpacing: '0.5px',
                         textTransform: 'uppercase',
-                        whiteSpace: 'nowrap'
+                        whiteSpace: 'nowrap',
+                        verticalAlign: 'middle',
+                        lineHeight: '1',
+                        height: '28px'
                       }}>
                         Senior Business Leader
                       </td>
