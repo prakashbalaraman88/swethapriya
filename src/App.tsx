@@ -131,11 +131,11 @@ function App() {
     try {
       const element = portfolioRef.current;
 
-      // Pre-crop the image to match the display dimensions (50% of 794px = 397px, 110mm ≈ 415px at scale 2)
+      // Pre-crop the image to match exact display dimensions
       const croppedImage = await getCroppedImageBase64(
         photoUrl,
-        794, // Target width in pixels (will be 50% of this)
-        830, // Target height in pixels (110mm at 96dpi * 2 for scale)
+        794, // Full width in pixels
+        830, // Height for 110mm at scale 2
         'center 15%'
       );
 
@@ -152,7 +152,7 @@ function App() {
       // Wait for all fonts to load
       await document.fonts.ready;
 
-      // Capture with cropped image
+      // Capture with precise pixel-based rendering
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: false,
@@ -164,15 +164,52 @@ function App() {
         onclone: (clonedDoc) => {
           const clonedElement = clonedDoc.getElementById('portfolio-content');
           if (clonedElement) {
-            clonedElement.style.width = '210mm';
+            clonedElement.style.width = '794px';
 
-            // Ensure hero image renders at correct size
-            const heroImg = clonedElement.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
-            if (heroImg) {
-              heroImg.style.width = '100%';
-              heroImg.style.height = '100%';
-              heroImg.style.objectFit = 'contain';
-              heroImg.style.display = 'block';
+            // Convert all pages to pixel dimensions
+            const pages = clonedElement.querySelectorAll('[style*="pageBreakAfter"]');
+            pages.forEach(page => {
+              (page as HTMLElement).style.width = '794px';
+              (page as HTMLElement).style.height = '1123px';
+            });
+
+            // Fix hero section to exact pixel dimensions
+            const heroSection = clonedElement.querySelector('.relative.bg-\\[\\#1a1a1a\\].text-white.flex-shrink-0') as HTMLElement;
+            if (heroSection) {
+              heroSection.style.height = '415px'; // 110mm in pixels
+              heroSection.style.display = 'flex';
+              heroSection.style.overflow = 'hidden';
+            }
+
+            // Fix text column
+            const textColumn = heroSection?.querySelector('[style*="width: 50%"]') as HTMLElement;
+            if (textColumn) {
+              textColumn.style.width = '397px'; // Exact 50%
+              textColumn.style.height = '415px';
+              textColumn.style.display = 'flex';
+              textColumn.style.flexDirection = 'column';
+              textColumn.style.justifyContent = 'center';
+              textColumn.style.padding = '0 40px';
+              textColumn.style.boxSizing = 'border-box';
+            }
+
+            // Fix image container and image
+            const imageContainer = clonedElement.querySelector('[style*="overflow: hidden"]') as HTMLElement;
+            if (imageContainer && imageContainer.querySelector('img[alt="Swetha Priya"]')) {
+              imageContainer.style.width = '397px'; // Exact 50%
+              imageContainer.style.height = '415px';
+              imageContainer.style.overflow = 'hidden';
+              imageContainer.style.position = 'relative';
+              imageContainer.style.flexShrink = '0';
+
+              const heroImg = imageContainer.querySelector('img[alt="Swetha Priya"]') as HTMLImageElement;
+              if (heroImg) {
+                heroImg.style.width = '397px';
+                heroImg.style.height = '415px';
+                heroImg.style.objectFit = 'contain';
+                heroImg.style.objectPosition = 'center';
+                heroImg.style.display = 'block';
+              }
             }
           }
         }
