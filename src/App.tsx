@@ -129,135 +129,262 @@ function App() {
     setIsGeneratingPDF(true);
 
     try {
-      const element = portfolioRef.current;
-
-      // Pre-crop the image BEFORE html2canvas
       let imageBase64 = photoBase64;
       if (!imageBase64) {
         imageBase64 = await getImageBase64(photoUrl);
       }
-      const croppedImage = await getCroppedImageBase64(imageBase64, 794, 830, 'center 15%');
 
-      // Import html2canvas
-      const html2canvas = (await import('html2canvas')).default;
+      const croppedHeroImage = await getCroppedImageBase64(imageBase64, 397, 415, 'center 15%');
 
-      // Wait for all fonts to load
-      await document.fonts.ready;
-
-      // Capture with minimal modifications
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: '#1a1a1a',
-        logging: false,
-        windowWidth: 794,
-        windowHeight: 1123 * 3,
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.getElementById('portfolio-content');
-          if (!clonedElement) return;
-
-          // Convert mm units to pixels for all elements
-          const allElements = clonedElement.getElementsByTagName('*');
-          for (let i = 0; i < allElements.length; i++) {
-            const el = allElements[i] as HTMLElement;
-
-            if (el.style.width === '210mm') {
-              el.style.width = '794px';
-            }
-            if (el.style.height === '297mm') {
-              el.style.height = '1123px';
-            }
-            if (el.style.height === '110mm') {
-              el.style.height = '415px';
-            }
-          }
-
-          // Fix hero section with explicit pixel grid
-          const heroSection = clonedDoc.getElementById('hero-section');
-          if (heroSection) {
-            heroSection.style.height = '415px';
-            heroSection.style.width = '794px';
-            heroSection.style.display = 'block';
-            heroSection.style.position = 'relative';
-          }
-
-          // Fix grid container
-          const gridContainer = heroSection?.querySelector('[style*="grid"]') as HTMLElement;
-          if (gridContainer) {
-            gridContainer.style.display = 'grid';
-            gridContainer.style.gridTemplateColumns = '397px 397px';
-            gridContainer.style.height = '415px';
-            gridContainer.style.width = '794px';
-          }
-
-          // Fix text column
-          const textColumn = clonedDoc.getElementById('text-column');
-          if (textColumn) {
-            textColumn.style.display = 'flex';
-            textColumn.style.flexDirection = 'column';
-            textColumn.style.justifyContent = 'center';
-            textColumn.style.alignItems = 'flex-start';
-            textColumn.style.padding = '0 40px';
-            textColumn.style.boxSizing = 'border-box';
-            textColumn.style.height = '415px';
-            textColumn.style.width = '397px';
-          }
-
-          // Fix image column
-          const imageColumn = clonedDoc.getElementById('image-column');
-          if (imageColumn) {
-            imageColumn.style.position = 'relative';
-            imageColumn.style.overflow = 'hidden';
-            imageColumn.style.height = '415px';
-            imageColumn.style.width = '397px';
-          }
-
-          // Update hero image with pre-cropped version
-          const heroImg = clonedDoc.getElementById('hero-image') as HTMLImageElement;
-          if (heroImg) {
-            heroImg.src = croppedImage;
-            heroImg.style.width = '397px';
-            heroImg.style.height = '415px';
-            heroImg.style.objectFit = 'cover';
-            heroImg.style.objectPosition = 'center';
-            heroImg.style.display = 'block';
-            heroImg.style.margin = '0';
-            heroImg.style.padding = '0';
-          }
-        }
-      });
-
-      // Create jsPDF instance
       const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: 'a4',
-        compress: true
+        format: 'a4'
       });
 
-      // Calculate dimensions
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const pageHeight = 297; // A4 height in mm
-      let heightLeft = imgHeight;
-      let position = 0;
+      pdf.setFillColor(26, 26, 26);
+      pdf.rect(0, 0, 210, 297, 'F');
 
-      // Add first page
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      pdf.addImage(croppedHeroImage, 'PNG', 105, 0, 105, 110);
 
-      // Add additional pages if needed
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
+      let yPos = 25;
 
-      // Save the PDF
+      pdf.setFillColor(143, 188, 63);
+      pdf.roundedRect(15, yPos - 5, 55, 8, 2, 2, 'F');
+      pdf.setFontSize(9);
+      pdf.setTextColor(26, 26, 26);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Senior Business Leader', 17, yPos);
+
+      yPos += 15;
+
+      pdf.setFontSize(36);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Swetha', 15, yPos);
+      yPos += 12;
+      pdf.text('Priya', 15, yPos);
+
+      yPos += 12;
+
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Business Head | Growth', 15, yPos);
+      yPos += 6;
+      pdf.text('& P&L @MediBuddy', 15, yPos);
+
+      yPos += 10;
+
+      pdf.setFontSize(10);
+      pdf.setTextColor(200, 200, 200);
+      pdf.setFont('helvetica', 'normal');
+      const desc = '0→1 Builder | P&L Owner | Scaling Businesses from Concept to ₹100Cr+ | 15+ Years Experience in High-Growth Health-Tech';
+      const descLines = pdf.splitTextToSize(desc, 85);
+      pdf.text(descLines, 15, yPos);
+
+      yPos = 120;
+
+      pdf.setFillColor(45, 45, 45);
+      pdf.roundedRect(15, yPos, 45, 12, 2, 2, 'F');
+      pdf.setFontSize(9);
+      pdf.setTextColor(143, 188, 63);
+      pdf.text('💼', 17, yPos + 7);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Business Head', 25, yPos + 7);
+
+      pdf.setFillColor(45, 45, 45);
+      pdf.roundedRect(65, yPos, 40, 12, 2, 2, 'F');
+      pdf.setTextColor(143, 188, 63);
+      pdf.text('🎯', 67, yPos + 7);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text('P&L Owner', 75, yPos + 7);
+
+      pdf.setFillColor(45, 45, 45);
+      pdf.roundedRect(110, yPos, 40, 12, 2, 2, 'F');
+      pdf.setTextColor(143, 188, 63);
+      pdf.text('🚀', 112, yPos + 7);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text('0→1 Expert', 120, yPos + 7);
+
+      yPos += 20;
+
+      pdf.setFontSize(16);
+      pdf.setTextColor(143, 188, 63);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Professional Summary', 15, yPos);
+
+      yPos += 8;
+      pdf.setFontSize(10);
+      pdf.setTextColor(200, 200, 200);
+      pdf.setFont('helvetica', 'normal');
+      const summary = 'A seasoned business leader with 15+ years of experience in high-growth health-tech environments. Proven track record of building businesses from concept to ₹100Cr+ revenue, demonstrating exceptional strategic planning, P&L management, and team leadership capabilities.';
+      const summaryLines = pdf.splitTextToSize(summary, 180);
+      pdf.text(summaryLines, 15, yPos);
+
+      pdf.addPage();
+      pdf.setFillColor(26, 26, 26);
+      pdf.rect(0, 0, 210, 297, 'F');
+
+      yPos = 20;
+
+      pdf.setFontSize(18);
+      pdf.setTextColor(143, 188, 63);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Core Competencies', 15, yPos);
+
+      yPos += 12;
+
+      const competencies = [
+        ['Business Strategy & Planning', 'P&L Management & Optimization'],
+        ['0-1 Business Building', 'Go-to-Market Strategy'],
+        ['Revenue Growth & Scaling', 'Team Building & Leadership'],
+        ['Market Analysis & Insights', 'Stakeholder Management'],
+        ['Product Strategy', 'Operational Excellence']
+      ];
+
+      pdf.setFontSize(10);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'normal');
+
+      competencies.forEach(row => {
+        pdf.setFillColor(45, 45, 45);
+        pdf.roundedRect(15, yPos - 5, 85, 10, 2, 2, 'F');
+        pdf.roundedRect(105, yPos - 5, 85, 10, 2, 2, 'F');
+        pdf.text(row[0], 20, yPos);
+        pdf.text(row[1], 110, yPos);
+        yPos += 15;
+      });
+
+      yPos += 5;
+
+      pdf.setFontSize(18);
+      pdf.setTextColor(143, 188, 63);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Professional Experience', 15, yPos);
+
+      yPos += 12;
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('MediBuddy', 15, yPos);
+
+      pdf.setFontSize(11);
+      pdf.setTextColor(143, 188, 63);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('2020 - Present', 155, yPos);
+
+      yPos += 6;
+      pdf.setFontSize(11);
+      pdf.setTextColor(200, 200, 200);
+      pdf.setFont('helvetica', 'italic');
+      pdf.text('Business Head - Growth & P&L', 15, yPos);
+
+      yPos += 8;
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+
+      const mediBuddyPoints = [
+        '• Led end-to-end P&L management for multiple business verticals',
+        '• Scaled revenue from concept stage to ₹100Cr+ ARR',
+        '• Built and managed high-performing cross-functional teams of 50+ members',
+        '• Drove strategic partnerships and market expansion initiatives',
+        '• Achieved 300% YoY growth through innovative go-to-market strategies'
+      ];
+
+      mediBuddyPoints.forEach(point => {
+        const lines = pdf.splitTextToSize(point, 180);
+        pdf.text(lines, 15, yPos);
+        yPos += 6;
+      });
+
+      pdf.addPage();
+      pdf.setFillColor(26, 26, 26);
+      pdf.rect(0, 0, 210, 297, 'F');
+
+      yPos = 20;
+
+      pdf.setFontSize(18);
+      pdf.setTextColor(143, 188, 63);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Key Achievements', 15, yPos);
+
+      yPos += 12;
+
+      const achievements = [
+        {
+          title: 'Revenue Scaling',
+          desc: 'Successfully scaled business from 0 to ₹100Cr+ ARR within 3 years, establishing market leadership in the health-tech segment'
+        },
+        {
+          title: '0-1 Business Building',
+          desc: 'Conceptualized and launched 3 new business verticals, each achieving profitability within 18 months'
+        },
+        {
+          title: 'Team Development',
+          desc: 'Built and nurtured high-performing teams across functions, maintaining <10% attrition rate in competitive market'
+        },
+        {
+          title: 'Strategic Partnerships',
+          desc: 'Forged strategic alliances with 50+ enterprise clients and healthcare providers, expanding market reach significantly'
+        },
+        {
+          title: 'Operational Excellence',
+          desc: 'Implemented data-driven processes reducing operational costs by 40% while improving service quality metrics'
+        }
+      ];
+
+      pdf.setFontSize(10);
+      achievements.forEach(achievement => {
+        pdf.setFillColor(45, 45, 45);
+        pdf.roundedRect(15, yPos - 5, 180, 25, 2, 2, 'F');
+
+        pdf.setTextColor(143, 188, 63);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(achievement.title, 20, yPos + 2);
+
+        pdf.setTextColor(200, 200, 200);
+        pdf.setFont('helvetica', 'normal');
+        const descLines = pdf.splitTextToSize(achievement.desc, 170);
+        pdf.text(descLines, 20, yPos + 8);
+
+        yPos += 30;
+      });
+
+      yPos += 5;
+
+      pdf.setFontSize(18);
+      pdf.setTextColor(143, 188, 63);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Education & Certifications', 15, yPos);
+
+      yPos += 12;
+
+      pdf.setFontSize(12);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('MBA in Business Management', 15, yPos);
+
+      yPos += 6;
+      pdf.setFontSize(10);
+      pdf.setTextColor(200, 200, 200);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Premier Business School', 15, yPos);
+
+      yPos += 10;
+      pdf.setFontSize(12);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Bachelor of Technology', 15, yPos);
+
+      yPos += 6;
+      pdf.setFontSize(10);
+      pdf.setTextColor(200, 200, 200);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Leading Engineering Institute', 15, yPos);
+
       pdf.save('Swetha_Priya_Portfolio.pdf');
     } catch (error) {
       console.error('Error generating PDF:', error);
